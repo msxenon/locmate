@@ -10,7 +10,6 @@ The editor runs locally on your machine, meaning you can use familiar versioning
   * [Supprted](#supported)
   * [Planned](#planned)
 * [Installation](#installation)
-* [Configuration](#configuration)
 * [Usage](#usage)
 
 ## Features
