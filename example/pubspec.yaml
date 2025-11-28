@@ -1,0 +1,10 @@
+name: example
+
+environment:
+  sdk: ^3.6.1
+
+dependencies: 
+  locmate:
+    path: ../packages/locmate
+
+ 

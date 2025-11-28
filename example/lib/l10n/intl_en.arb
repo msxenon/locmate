@@ -1,0 +1,21 @@
+{
+  "@@locale": "en",
+  "key2": "Key2Valuen",
+  "key1": "jnj\n",
+  "key123": "",
+  "key444": "",
+  "shiftNameDurationKey": "{shiftName} shift will start in {duration}",
+  "@shiftNameDurationKey": {
+    "description": "Desc",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "shiftName": {
+        "type": "String"
+      }
+    }
+  },
+  "companiesPlural": "{count, plural, zero{No Companies, Yet!} one{One company} other{{count} companies}}",
+  "@companiesPlural": {}
+}

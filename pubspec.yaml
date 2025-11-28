@@ -1,0 +1,10 @@
+name: locmate_workspace
+description: Visual editor for Application Resource Bundle localization files to be used with the intl package.
+version: 0.0.1
+
+environment:
+  sdk: ^3.6.1
+
+dependencies: 
+  melos: ^6.3.2
+

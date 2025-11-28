@@ -1,0 +1,171 @@
+import 'dart:convert';
+
+import 'package:locmate/locmate.dart';
+import 'package:locmate_web/src/core/constants.dart';
+import 'package:locmate_web/src/core/logger/logger_service.dart';
+import 'package:locmate_web/src/data/datasources/project_datasource.dart';
+import 'package:locmate_web/src/data/models/crud_file_locale_model.dart';
+import 'package:locmate_web/src/data/models/key_format.dart';
+import 'package:locmate_web/src/data/models/l10n_yaml_model.dart';
+import 'package:locmate_web/src/data/models/project_response.dart';
+import 'package:locmate_web/src/data/repositories/project_repository.dart';
+import 'package:locmate_web/src/features/editor/logic/locmate_settings_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'project_manager.g.dart';
+
+@Riverpod(keepAlive: true)
+class ProjectManager extends _$ProjectManager {
+  @override
+  FutureOr<ProjectResponse> build() async {
+    final x = await ref.read(projectDatasourceProvider).getProjectPath();
+
+    try {
+      final locmateSettingsModel =
+          await ref.read(projectRepositoryProvider).getLocmateModel();
+      final l10nYaml = await ref.read(projectRepositoryProvider).getL10nModel();
+      if (l10nYaml == null) {
+        return ProjectEmpty(projectPath: x);
+      }
+
+      return ProjectData(
+        locmateSettingsModel: locmateSettingsModel,
+        projectPath: x,
+        l10nYaml: l10nYaml,
+        arbFileEntities: await loadString(
+            projectPath: x,
+            arbDir: l10nYaml.arbDir,
+            locmateModel: locmateSettingsModel),
+      );
+    } catch (e) {
+      return ProjectEmpty(projectPath: x);
+    }
+  }
+
+  ProjectData? _getValidState() {
+    if (state is AsyncData && (state as AsyncData).value is ProjectData) {
+      return state.value as ProjectData;
+    }
+    return null;
+  }
+
+  String? _getArbFullPath(String arbFileName) {
+    final project = _getValidState();
+    if (project == null) {
+      return null;
+    }
+    final fullPath = Constants.fullArbDirPath(
+      projectPath: project.projectPath,
+      arbDir: project.l10nYaml.arbDir,
+      arbFileName: arbFileName,
+    );
+    return fullPath;
+  }
+
+  Future<void> addLanguage(String locale) async {
+    final fullPath = _getArbFullPath('app_${locale}_.arb');
+
+    if (fullPath == null) {
+      return;
+    }
+    ref
+        .read(projectRepositoryProvider)
+        .createFile(path: fullPath, content: jsonEncode({'@@locale': locale}));
+    ref.invalidateSelf();
+  }
+
+  Future<void> saveLocmateModel(
+    LocmateSettingsModel locmateSettingsModel,
+  ) async {
+    await ref.read(projectDatasourceProvider).fileOp(
+          FileOpContextWrite(
+            content: locmateSettingsModel.toJson(),
+            path: LocmateSettingsModel.defaultFileName,
+          ),
+        );
+
+    ref.invalidateSelf();
+  }
+
+  void createDemoProject() async {
+    final demoLocmateYaml = LocmateSettingsModel(
+        projectName: 'Demo project',
+        keyFormat: KeyFormat.camelCase,
+        localesOrder: []);
+    final demoL10nYaml =
+        L10nYamlModel(arbDir: '', templateArbFile: 'app_en.arb');
+    final arbFileEn = 'app_en.arb';
+    final arbFileAr = 'app_ar.arb';
+
+    await ref.read(projectRepositoryProvider).saveLocmateModel(demoLocmateYaml);
+    await ref.read(projectRepositoryProvider).saveL10nModel(demoL10nYaml);
+    await ref.read(projectDatasourceProvider).fileOp(
+          FileOpContextWrite(
+            path: arbFileAr,
+            content: jsonEncode({'@@locale': 'ar'}),
+          ),
+        );
+    await ref.read(projectDatasourceProvider).fileOp(
+          FileOpContextWrite(
+            path: arbFileEn,
+            content: jsonEncode({'@@locale': 'en'}),
+          ),
+        );
+    ref.invalidateSelf();
+  }
+
+  Future<List<ArbFileEntity>> loadString({
+    required String projectPath,
+    required String arbDir,
+    required LocmateSettingsModel? locmateModel,
+  }) async {
+    final result = <ArbFileEntity>[];
+    final arbFileNamesList = await ref
+        .read(projectRepositoryProvider)
+        .listArbFiles(Constants.fullArbDirPath(
+          projectPath: projectPath,
+          arbDir: arbDir,
+        ));
+    final fullArbFilesPaths = arbFileNamesList
+        .map((e) => Constants.fullArbDirPath(
+            arbDir: arbDir, projectPath: projectPath, arbFileName: e))
+        .toList();
+    final arbFileOps = await Future.wait(fullArbFilesPaths.map((e) => ref
+        .read(projectDatasourceProvider)
+        .fileOp(FileOpContextRead(path: e))));
+    int index = 0;
+    for (final arbFileOp in arbFileOps) {
+      try {
+        if (arbFileOp is! StringOpResponse) {
+          continue;
+        }
+        result.add(
+          ArbFileEntity(
+            values: jsonDecode(arbFileOp.response),
+            fileName: arbFileNamesList[index],
+          ),
+        );
+      } catch (e, s) {
+        LoggerService.instance.web.e(
+          'Error while reading arb file',
+          error: e,
+          stackTrace: s,
+        );
+      } finally {
+        index++;
+      }
+    }
+
+    if (locmateModel?.localesOrder?.isNotEmpty == true) {
+      result.sort((a, b) {
+        final aIndex =
+            locmateModel!.localesOrder!.indexOf(a.locale.toLanguageTag());
+        final bIndex =
+            locmateModel.localesOrder!.indexOf(b.locale.toLanguageTag());
+        return aIndex - bIndex;
+      });
+    }
+
+    return result;
+  }
+}

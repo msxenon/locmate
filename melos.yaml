@@ -1,0 +1,45 @@
+# Installation
+# dart pub global activate melos
+name: monaweb
+repository: https://github.com/monawebapp/Monkkkaweb
+sdkPath: .fvm/flutter_sdk
+
+packages:
+  - "packages/*"
+  - "example"
+command:
+  version:
+    # Generate commit links in package changelogs.
+    linkToCommits: true
+    # # Only allow versioning to happen on main branch.
+    # branch: master
+    # Additionally build a changelog at the root of the workspace.
+    workspaceChangelog: true
+
+  bootstrap:
+    # It seems so that running "pub get" in parallel has some issues (like
+    # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
+    # makes the CI much more stable.
+    runPubGetInParallel: false
+
+scripts:
+  gen:
+    run: melos exec --depends-on="build_runner" dart run build_runner build --delete-conflicting-outputs
+
+  gen:clean:
+    run: melos exec --depends-on="build_runner" dart pub run build_runner clean
+
+  test:
+    run: melos exec --fail-fast --depends-on="flutter_test" -- flutter test
+
+  build:
+    run: sh scripts/build_web_and_move.sh
+
+  locmate:
+    run: cd example && dart pub run locmate
+
+  buildLocmate:
+    run: melos run build && melos run locmate
+
+  kClean:
+    run: melos exec flutter clean

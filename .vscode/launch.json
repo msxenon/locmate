@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "locmate_web (SharedPrefs)",
+            "cwd": "packages/locmate_web",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define",
+                "envConfig=sharedPrefs"
+            ]
+        },
+        {
+            "name": "locmate_web (Server)",
+            "cwd": "packages/locmate_web",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define",
+                "envConfig=server",
+            ]
+        },
+        {
+            "name": "locmate_web (profile mode)",
+            "cwd": "locmate_web",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "locmate_web (release mode)",
+            "cwd": "locmate_web",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
