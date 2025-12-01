@@ -28,8 +28,11 @@ The editor runs locally on your machine, meaning you can use familiar versioning
 
 ### Planned
 
+* Fix Logs
+* Enhance error handling
 * Dark theme
 * A subscription service for automated machine translations (e.g. using DeepL)
+
 
 ## Installation
 
