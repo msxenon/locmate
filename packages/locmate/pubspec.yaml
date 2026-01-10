@@ -1,6 +1,6 @@
 name: locmate
 description: Visual editor for Application Resource Bundle localization files to be used with the intl package.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/msxenon/pre_locmate
 repository: https://github.com/msxenon/pre_locmate
 
@@ -14,7 +14,6 @@ dependencies:
   tint: ^2.0.1
   emojis: ^0.9.9
   yaml: ^3.1.3
-  riverpod: ^2.6.1
   dart_mappable: ^4.4.0
   yaml_edit: ^2.2.2
   web_socket_channel: ^3.0.3
