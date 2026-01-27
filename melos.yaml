@@ -1,7 +1,7 @@
 # Installation
 # dart pub global activate melos
 name: monaweb
-repository: https://github.com/monawebapp/Monkkkaweb
+repository: https://github.com/msxenon/locmate
 sdkPath: .fvm/flutter_sdk
 
 packages:
