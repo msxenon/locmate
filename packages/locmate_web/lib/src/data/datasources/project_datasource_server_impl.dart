@@ -62,7 +62,13 @@ class ProjectDatasourceServerImpl extends ProjectDataSource {
   @override
   Future<StringOpResponse> version() {
     return dio.get(UrlPaths.version).fromJson((e) {
-      return StringOpResponse(response: '${e['version']}+${e['build_number']}');
+      final version = e['version'] as String;
+      final build = e['build_number'];
+      String displayVersion = version;
+      if (build != null) {
+        displayVersion = '$displayVersion+$build';
+      }
+      return StringOpResponse(response: displayVersion);
     }).then((response) => response.fold((l) {
           throw '${l.message()}: ${dio.options.baseUrl}';
         }, (r) {
