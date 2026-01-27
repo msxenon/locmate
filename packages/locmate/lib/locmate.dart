@@ -8,3 +8,4 @@ export 'src/models/dir_op_context.dart';
 export 'src/url_paths.dart';
 export 'locmate.init.dart';
 export 'src/models/server_response.dart';
+export 'src/utils/json_string_mapper.dart';

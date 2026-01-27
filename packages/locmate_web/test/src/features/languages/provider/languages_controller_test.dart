@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locmate/locmate.dart';
-import 'package:locmate_web/src/data/datasources/project_datasource.dart';
 import 'package:locmate_web/src/data/models/crud_file_locale_model.dart';
 import 'package:locmate_web/src/data/models/l10n_yaml_model.dart';
 import 'package:locmate_web/src/data/models/project_response.dart';
+import 'package:locmate_web/src/data/repositories/project_repository.dart';
 import 'package:locmate_web/src/features/editor/logic/locmate_settings_model.dart';
 import 'package:locmate_web/src/features/editor/logic/project_manager.dart';
 import 'package:locmate_web/src/features/editor/ui/add_new_key_page_sheet.dart';
@@ -18,7 +18,7 @@ void main() {
   late LanguagesController languagesController;
   late MockProjectManager projectManager;
   late MockSharedPrefrencesWrapper mockSharedPrefrencesWrapper;
-  late ProjectDataSource projectDataSource;
+  late MockProjectRepository projectRepository;
   late List<ArbFileEntity> arbFileEntities;
   setUp(() async {
     registerFallbackValue(FileOpContextRead(path: ''));
@@ -28,15 +28,15 @@ void main() {
         .thenAnswer((_) async => null);
     when(() => mockSharedPrefrencesWrapper.setString(any(), any()))
         .thenAnswer((_) async {});
-    projectDataSource = MockProjectDataSource();
-    when(() => projectDataSource.fileOp(any()))
+    projectRepository = MockProjectRepository();
+    when(() => projectRepository.saveArbFileContent(any(), any()))
         .thenAnswer((_) async => VoidOpResponse());
 
     final container = ProviderContainer(overrides: [
       projectManagerProvider.overrideWith(() => projectManager),
       sharedPrefrencesWrapperProvider
           .overrideWith((_) => mockSharedPrefrencesWrapper),
-      projectDatasourceProvider.overrideWithValue(projectDataSource),
+      projectRepositoryProvider.overrideWithValue(projectRepository),
     ]);
     arbFileEntities = [
       ArbFileEntity(
@@ -70,11 +70,9 @@ void main() {
       final content = arbFileEntities.first.values;
 
       print(content);
-      verify(() => projectDataSource.fileOp(
-            FileOpContextWrite(
-              path: '/test/path/app_en.arb',
-              content: content,
-            ),
+      verify(() => projectRepository.saveArbFileContent(
+            '/test/path/app_en.arb',
+            content,
           )).called(1);
     });
   });

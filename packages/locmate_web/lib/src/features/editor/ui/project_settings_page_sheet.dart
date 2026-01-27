@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:locmate_web/src/core/nav/navigation.dart';
@@ -8,6 +6,7 @@ import 'package:locmate_web/src/data/models/key_format.dart';
 import 'package:locmate_web/src/features/editor/logic/locmate_settings_model.dart';
 import 'package:locmate_web/src/features/editor/logic/project_settings_controller.dart';
 import 'package:locmate_web/src/features/editor/ui/home_screen.dart';
+import 'package:locmate_web/src/features/languages/provider/languages_controller.dart';
 
 class ProjectSettingsPageSheet extends PageSheetInterface {
   ProjectSettingsPageSheet();
@@ -41,10 +40,12 @@ class ProjectSettingsPageSheet extends PageSheetInterface {
 class _ProjectSettingsWidget extends ConsumerStatefulWidget {
   const _ProjectSettingsWidget();
   @override
-  ConsumerState<_ProjectSettingsWidget> createState() => __ProjectSettingsWidgetState();
+  ConsumerState<_ProjectSettingsWidget> createState() =>
+      __ProjectSettingsWidgetState();
 }
 
-class __ProjectSettingsWidgetState extends ConsumerState<_ProjectSettingsWidget> {
+class __ProjectSettingsWidgetState
+    extends ConsumerState<_ProjectSettingsWidget> {
   TextEditingController? _textController;
 
   @override
@@ -100,7 +101,9 @@ class __ProjectSettingsWidgetState extends ConsumerState<_ProjectSettingsWidget>
                     child: ListTile(
                       leading: TextButton.icon(
                         style: TextButton.styleFrom(
-                          foregroundColor: dataState.selectedLangs.isNotEmpty ? Colors.red : null,
+                          foregroundColor: dataState.selectedLangs.isNotEmpty
+                              ? Colors.red
+                              : null,
                         ),
                         label: const Text('Delete selected'),
                         icon: Icon(Icons.delete),
@@ -116,7 +119,13 @@ class __ProjectSettingsWidgetState extends ConsumerState<_ProjectSettingsWidget>
                     label: const Text('Add a new language'),
                     icon: Icon(Icons.add),
                     onPressed: () {
-                      unawaited(Navigation().addNewLang(context));
+                      Navigation().addNewLang(context).then((value) {
+                        if (value != null && value.isNotEmpty) {
+                          ref
+                              .read(languagesControllerProvider.notifier)
+                              .addLanguage(value);
+                        }
+                      });
                     },
                   ),
                 ],
@@ -133,9 +142,11 @@ class __ProjectSettingsWidgetState extends ConsumerState<_ProjectSettingsWidget>
                       key: ValueKey([index]),
                       child: ListTile(
                         leading: Checkbox(
-                            value: dataState.selectedLangs.contains(lang.toLanguageTag()),
+                            value: dataState.selectedLangs
+                                .contains(lang.toLanguageTag()),
                             onChanged: (value) {
-                              provider.toggleLangSelection(lang.toLanguageTag());
+                              provider
+                                  .toggleLangSelection(lang.toLanguageTag());
                             }),
                         title: Text(langs[index].toLanguageTag()),
                         trailing: Icon(Icons.drag_handle),
@@ -148,7 +159,8 @@ class __ProjectSettingsWidgetState extends ConsumerState<_ProjectSettingsWidget>
                     }
                     final item = langs.removeAt(oldIndex);
                     langs.insert(newIndex, item);
-                    provider.saveLangsOrder(langs.map((e) => e.toLanguageTag()).toList());
+                    provider.saveLangsOrder(
+                        langs.map((e) => e.toLanguageTag()).toList());
                   },
                 ),
               ),

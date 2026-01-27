@@ -41,6 +41,11 @@ class WoltAppBar extends StatelessWidget {
               ],
             ),
           ),
+          CloseButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ],
       ),
     );

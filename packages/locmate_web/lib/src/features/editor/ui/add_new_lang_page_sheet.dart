@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:locmate_web/src/core/wolt_modal_sheet/presentation/paged_selector_interface.dart';
-import 'package:locmate_web/src/features/languages/provider/languages_controller.dart';
 
 class AddNewLangPageSheet extends PageSheetInterface {
   @override
@@ -73,7 +72,7 @@ class _AddNewLangWidgetState extends ConsumerState<AddNewLangWidget> {
           TextButton.icon(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                ref.read(languagesControllerProvider.notifier).addLanguage(_textController.text);
+                Navigator.of(context).pop(_textController.text);
               }
             },
             label: Text('Add'),

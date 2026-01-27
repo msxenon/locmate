@@ -1,4 +1,4 @@
-import 'package:locmate/src/url_paths.dart';
+import 'package:locmate/src/server.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ServerLogger {
@@ -6,14 +6,19 @@ class ServerLogger {
   ServerLogger._();
 
   late final _channel = WebSocketChannel.connect(
-    Uri.parse("ws://localhost:${UrlPaths.port}/logs"),
+    Uri.parse(Server.instance!.url).replace(scheme: 'ws', path: 'logs'),
   );
   void log(String message) {
     print('[SERVER] $message');
     try {
       _channel.sink.add(message);
-    } catch (e) {
-      print('[SERVER LOGGER ERROR] $e');
+    } catch (e, s) {
+      print('[SERVER BACKUP LOG] $message');
+      print('[SERVER LOGGER ERROR] $e,$s');
     }
+  }
+
+  void consoleLog(String message) {
+    print('[SERVER] $message');
   }
 }

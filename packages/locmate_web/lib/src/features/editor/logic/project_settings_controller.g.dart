@@ -7,12 +7,12 @@ part of 'project_settings_controller.dart';
 // **************************************************************************
 
 String _$projectSettingsControllerHash() =>
-    r'b58f7dd9597f91dfa7adb1f322344515fecfc784';
+    r'b3640b523454d9d0166ce21ad50e359bdeb999ba';
 
 /// See also [ProjectSettingsController].
 @ProviderFor(ProjectSettingsController)
-final projectSettingsControllerProvider = AutoDisposeNotifierProvider<
-    ProjectSettingsController, AsyncValue<LocmateSettingsState>>.internal(
+final projectSettingsControllerProvider = AutoDisposeAsyncNotifierProvider<
+    ProjectSettingsController, LocmateSettingsState>.internal(
   ProjectSettingsController.new,
   name: r'projectSettingsControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -23,6 +23,6 @@ final projectSettingsControllerProvider = AutoDisposeNotifierProvider<
 );
 
 typedef _$ProjectSettingsController
-    = AutoDisposeNotifier<AsyncValue<LocmateSettingsState>>;
+    = AutoDisposeAsyncNotifier<LocmateSettingsState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

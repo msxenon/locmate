@@ -1,13 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:locmate/locmate.dart';
 import 'package:locmate_web/src/core/constants.dart';
-import 'package:locmate_web/src/data/datasources/project_datasource.dart';
 import 'package:locmate_web/src/data/models/key_format.dart';
 import 'package:locmate_web/src/data/models/project_response.dart';
+import 'package:locmate_web/src/data/repositories/project_repository.dart';
 import 'package:locmate_web/src/features/editor/logic/project_manager.dart';
 import 'package:locmate_web/src/features/editor/ui/add_new_key_page_sheet.dart';
 import 'package:locmate_web/src/features/languages/models/arb_items.dart';
@@ -32,7 +30,8 @@ class LanguagesController extends _$LanguagesController {
   final _allKeys = <String>{};
   static const _focusedKeyName = 'focusedKeyName';
 
-  Set<String> get _allReadableKeys => _allKeys.whereNot((element) => element.startsWith('@')).toSet();
+  Set<String> get _allReadableKeys =>
+      _allKeys.whereNot((element) => element.startsWith('@')).toSet();
   String _searchKeyword = '';
 
   @override
@@ -50,7 +49,8 @@ class LanguagesController extends _$LanguagesController {
     }
   }
 
-  Future<LangState> _buildState(AsyncValue<ProjectResponse> projectState) async {
+  Future<LangState> _buildState(
+      AsyncValue<ProjectResponse> projectState) async {
     final projectData = projectState.value;
     if (projectState is AsyncData && projectData is ProjectData) {
       return _successContentHandler(projectData);
@@ -75,7 +75,8 @@ class LanguagesController extends _$LanguagesController {
     if (value.isEmpty) {
       return false;
     }
-    return !_allKeys.any((element) => element.toLowerCase() == value.trim().toLowerCase());
+    return !_allKeys
+        .any((element) => element.toLowerCase() == value.trim().toLowerCase());
   }
 
   void toggleCheckmark(String key) {
@@ -98,7 +99,8 @@ class LanguagesController extends _$LanguagesController {
     _allKeys.clear();
     _allKeys.addAll(allKeys);
     _selectedKeys.removeWhere((element) => !_allKeys.contains(element));
-    final arbFilesContent = l10nFolderModel.map((e) => ArbItems.fromMap(e.values)).toList();
+    final arbFilesContent =
+        l10nFolderModel.map((e) => ArbItems.fromMap(e.values)).toList();
     final base = LanguagesMapper()(arbFilesContent);
     for (final x in base) {
       if (x.key.startsWith('@')) continue;
@@ -106,7 +108,8 @@ class LanguagesController extends _$LanguagesController {
       List<KeyWarning> warnings = [];
       double completionPercentage = 0;
       final step = 100 / allLocales.length;
-      final formattedKey = _formatKey(x.key, projectData.locmateSettingsModel?.keyFormat);
+      final formattedKey =
+          _formatKey(x.key, projectData.locmateSettingsModel?.keyFormat);
       if (formattedKey != null && formattedKey != x.key) {
         warnings.add(TypeCaseKeyWarning(formattedKey));
       }
@@ -114,18 +117,22 @@ class LanguagesController extends _$LanguagesController {
       for (final locale in allLocales) {
         final valueOfThisKeyInThisLocale = x.values[locale];
         valuesMap[locale] = valueOfThisKeyInThisLocale;
-        if (valueOfThisKeyInThisLocale is String && valueOfThisKeyInThisLocale.contains('{')) {
-          isPlural = IcuParser().parse(valueOfThisKeyInThisLocale)?.firstOrNull is PluralElement;
+        if (valueOfThisKeyInThisLocale is String &&
+            valueOfThisKeyInThisLocale.contains('{')) {
+          isPlural = IcuParser().parse(valueOfThisKeyInThisLocale)?.firstOrNull
+              is PluralElement;
         }
 
-        if (valueOfThisKeyInThisLocale != null && valueOfThisKeyInThisLocale.toString().isNotEmpty && !isPlural) {
+        if (valueOfThisKeyInThisLocale != null &&
+            valueOfThisKeyInThisLocale.toString().isNotEmpty &&
+            !isPlural) {
           completionPercentage += step;
         }
       }
       if (_searchKeyword.isNotEmpty) {
         final keyIsMatched = x.key.toLowerCase().contains(_searchKeyword);
-        final valueHasMatch =
-            valuesMap.values.any((element) => element.toString().toLowerCase().contains(_searchKeyword));
+        final valueHasMatch = valuesMap.values.any((element) =>
+            element.toString().toLowerCase().contains(_searchKeyword));
         if (!keyIsMatched && !valueHasMatch) {
           continue;
         }
@@ -170,11 +177,13 @@ class LanguagesController extends _$LanguagesController {
         int notEmptyCasess = 0;
         int allPluralCases = 0;
         for (final element in pp.values) {
-          notEmptyCasess += element.values.values.nonNulls.where((e) => e.isNotEmpty).length;
+          notEmptyCasess +=
+              element.values.values.nonNulls.where((e) => e.isNotEmpty).length;
           allPluralCases += element.values.length;
         }
 
-        final pluralCompletionPercentage = (notEmptyCasess / allPluralCases) * 100;
+        final pluralCompletionPercentage =
+            (notEmptyCasess / allPluralCases) * 100;
         completionPercentage += pluralCompletionPercentage;
         languages.add(LangRowModel<PluralValueContainer>(
           key: x.key,
@@ -190,7 +199,8 @@ class LanguagesController extends _$LanguagesController {
         for (final locale in allLocales) {
           final valueOfThisKeyInThisLocale = x.values[locale];
           if (valueOfThisKeyInThisLocale is String) {
-            ss[locale] = StringValueContainer(value: valueOfThisKeyInThisLocale);
+            ss[locale] =
+                StringValueContainer(value: valueOfThisKeyInThisLocale);
           }
         }
         languages.add(LangRowModel<StringValueContainer>(
@@ -209,7 +219,9 @@ class LanguagesController extends _$LanguagesController {
       languages.sort((a, b) {
         switch (_sortType!) {
           case SortByKeys x:
-            return x.ascending ? a.key.compareTo(b.key) : b.key.compareTo(a.key);
+            return x.ascending
+                ? a.key.compareTo(b.key)
+                : b.key.compareTo(a.key);
           case SortByValues x:
             final locale = x.locale;
             final aValue = a.values[locale];
@@ -293,7 +305,8 @@ class LanguagesController extends _$LanguagesController {
   }
 
   Future<LangState> _successContentHandler(ProjectData projectData) async {
-    final allLocales = projectData.arbFileEntities.map((e) => e.locale).toList();
+    final allLocales =
+        projectData.arbFileEntities.map((e) => e.locale).toList();
 
     final rows = await _castLangsToRows(projectData, allLocales);
 
@@ -311,7 +324,9 @@ class LanguagesController extends _$LanguagesController {
       selectedKeysCount: _selectedKeys.length,
       allKeysCount: _allReadableKeys.length,
       isSortAscending: _sortType?.ascending ?? false,
-      sortColumnIndex: _sortType is SortByValues ? (_sortType as SortByValues).columnIndex : 0,
+      sortColumnIndex: _sortType is SortByValues
+          ? (_sortType as SortByValues).columnIndex
+          : 0,
       focusedKey: await _getFocusedKeyName(),
     );
   }
@@ -320,17 +335,23 @@ class LanguagesController extends _$LanguagesController {
     final validState = state.value;
     if (validState == null) return;
     final focusedKey = validState.copyWith(focusedKey: keyName);
-    unawaited(ref.read(sharedPrefrencesWrapperProvider).setString(_focusedKeyName, keyName));
+    unawaited(ref
+        .read(sharedPrefrencesWrapperProvider)
+        .setString(_focusedKeyName, keyName));
     if (setState) {
       state = AsyncData(focusedKey);
     }
   }
 
   Future<String?> _getFocusedKeyName() async {
-    final savedFocusedKey = await ref.read(sharedPrefrencesWrapperProvider).getString(_focusedKeyName);
+    final savedFocusedKey = await ref
+        .read(sharedPrefrencesWrapperProvider)
+        .getString(_focusedKeyName);
     if (savedFocusedKey == null) return null;
     if (!_allReadableKeys.contains(savedFocusedKey)) {
-      unawaited(ref.read(sharedPrefrencesWrapperProvider).setString(_focusedKeyName, null));
+      unawaited(ref
+          .read(sharedPrefrencesWrapperProvider)
+          .setString(_focusedKeyName, null));
       return null;
     }
     return savedFocusedKey;
@@ -354,7 +375,7 @@ class LanguagesController extends _$LanguagesController {
           arbFileName: fileName,
         );
         ops.add(
-          ref.read(projectDatasourceProvider).fileOp(FileOpContextWrite(path: path, content: jsonEncode(values))),
+          ref.read(projectRepositoryProvider).saveArbFileContent(path, values),
         );
       }
     }
@@ -371,9 +392,11 @@ class LanguagesController extends _$LanguagesController {
     for (final arbFileEntity in arbFileEntities) {
       final values = arbFileEntity.values;
       if (!values.containsKey(newKeyData.keyName)) {
-        values[newKeyData.keyName] =
-            newKeyData.isPlural ? _getPluralTemplate(arbFileEntity.locale.toLanguageTag()) : '';
-        values['@${newKeyData.keyName}'] = KeyBody(description: newKeyData.description.ifNotEmpty()).toJson();
+        values[newKeyData.keyName] = newKeyData.isPlural
+            ? _getPluralTemplate(arbFileEntity.locale.toLanguageTag())
+            : '';
+        values['@${newKeyData.keyName}'] =
+            KeyBody(description: newKeyData.description.ifNotEmpty()).toMap();
         final fileName = arbFileEntity.fileName;
         final path = Constants.fullArbDirPath(
           projectPath: projectState.projectPath,
@@ -381,7 +404,7 @@ class LanguagesController extends _$LanguagesController {
           arbFileName: fileName,
         );
         ops.add(
-          ref.read(projectDatasourceProvider).fileOp(FileOpContextWrite(path: path, content: jsonEncode(values))),
+          ref.read(projectRepositoryProvider).saveArbFileContent(path, values),
         );
       }
     }
@@ -391,7 +414,10 @@ class LanguagesController extends _$LanguagesController {
     ref.invalidate(projectManagerProvider);
   }
 
-  Future<void> saveValue({required String focusedLang, required String key, required String value}) async {
+  Future<void> saveValue(
+      {required String focusedLang,
+      required String key,
+      required String value}) async {
     final projectState = ref.read(projectManagerProvider).value as ProjectData?;
     if (projectState == null) return;
     final arbFileEntities = projectState.arbFileEntities;
@@ -408,7 +434,7 @@ class LanguagesController extends _$LanguagesController {
         arbFileName: fileName,
       );
       ops.add(
-        ref.read(projectDatasourceProvider).fileOp(FileOpContextWrite(path: path, content: jsonEncode(values))),
+        ref.read(projectRepositoryProvider).saveArbFileContent(path, values),
       );
     }
     await Future.wait(ops);
@@ -432,7 +458,7 @@ class LanguagesController extends _$LanguagesController {
           arbFileName: fileName,
         );
         ops.add(
-          ref.read(projectDatasourceProvider).fileOp(FileOpContextWrite(path: path, content: jsonEncode(values))),
+          ref.read(projectRepositoryProvider).saveArbFileContent(path, values),
         );
       }
     }

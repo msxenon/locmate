@@ -12,38 +12,37 @@ part 'project_settings_controller.g.dart';
 
 @riverpod
 class ProjectSettingsController extends _$ProjectSettingsController {
-  static const defaultState = LocmateSettingsState(
+  static const _defaultState = LocmateSettingsState(
     projectName: 'Untitled',
     keyFormat: KeyFormat.none,
     localesOrder: [],
   );
 
   @override
-  AsyncValue<LocmateSettingsState> build() {
-    final projectResponse = ref.watch(projectManagerProvider);
+  FutureOr<LocmateSettingsState> build() async {
+    final projectResponse = await ref.watch(projectManagerProvider.future);
 
-    return projectResponse.when(
-      data: (data) {
-        switch (data) {
-          case ProjectData x:
-            return AsyncData(
-              LocmateSettingsState(
-                projectName: x.locmateSettingsModel?.projectName ?? defaultState.projectName,
-                keyFormat: x.locmateSettingsModel?.keyFormat ?? defaultState.keyFormat,
-                localesOrder: data.arbFileEntities.map((e) => e.locale.toLanguageTag()).toList(),
-              ),
-            );
-          case ProjectEmpty():
-            return AsyncData(defaultState);
-        }
-      },
-      error: (e, s) => AsyncError(e, s),
-      loading: () => AsyncData(defaultState),
-    );
+    switch (projectResponse) {
+      case ProjectData x:
+        return LocmateSettingsState(
+          projectName: x.locmateSettingsModel?.projectName ??
+              x.pubspecProjectName ??
+              _defaultState.projectName,
+          keyFormat:
+              x.locmateSettingsModel?.keyFormat ?? _defaultState.keyFormat,
+          localesOrder: projectResponse.arbFileEntities
+              .map((e) => e.locale.toLanguageTag())
+              .toList(),
+        );
+      case ProjectEmpty():
+        return _defaultState;
+    }
   }
 
   Future<void> save() async {
-    await ref.read(projectRepositoryProvider).saveLocmateModel(state.value!.toModel());
+    await ref
+        .read(projectRepositoryProvider)
+        .saveLocmateModel(state.value!.toModel());
     ref.invalidate(projectManagerProvider);
   }
 
@@ -62,7 +61,8 @@ class ProjectSettingsController extends _$ProjectSettingsController {
   void toggleLangSelection(String lang) {
     final selectedLangs = state.value!.selectedLangs;
     if (selectedLangs.contains(lang)) {
-      state = AsyncData(state.value!.copyWith(selectedLangs: selectedLangs.where((e) => e != lang).toList()));
+      state = AsyncData(state.value!.copyWith(
+          selectedLangs: selectedLangs.where((e) => e != lang).toList()));
     } else {
       final newSelectedLangs = {...selectedLangs, lang};
       if (newSelectedLangs.length == state.value!.localesOrder.length) {
@@ -70,7 +70,8 @@ class ProjectSettingsController extends _$ProjectSettingsController {
         // showError('You can\'t select all languages');
         return;
       }
-      state = AsyncData(state.value!.copyWith(selectedLangs: newSelectedLangs.toList()));
+      state = AsyncData(
+          state.value!.copyWith(selectedLangs: newSelectedLangs.toList()));
     }
   }
 
@@ -82,17 +83,24 @@ class ProjectSettingsController extends _$ProjectSettingsController {
       return;
     }
     for (final lang in selectedLangs) {
-      final arbFileName = projectData.arbFileEntities.firstWhere((e) => e.locale.toLanguageTag() == lang).fileName;
+      final arbFileName = projectData.arbFileEntities
+          .firstWhere((e) => e.locale.toLanguageTag() == lang)
+          .fileName;
       final arbFilePath = Constants.fullArbDirPath(
         projectPath: projectData.projectPath,
         arbDir: projectData.l10nYaml.arbDir,
         arbFileName: arbFileName,
       );
-      await ref.read(projectDatasourceProvider).fileOp(FileOpContextDelete(path: arbFilePath));
+      await ref
+          .read(projectDatasourceProvider)
+          .fileOp(FileOpContextDelete(path: arbFilePath));
     }
 
     state = AsyncData(state.value!.copyWith(
-        selectedLangs: [], localesOrder: state.value!.localesOrder.where((e) => !selectedLangs.contains(e)).toList()));
+        selectedLangs: [],
+        localesOrder: state.value!.localesOrder
+            .where((e) => !selectedLangs.contains(e))
+            .toList()));
     save();
   }
 }

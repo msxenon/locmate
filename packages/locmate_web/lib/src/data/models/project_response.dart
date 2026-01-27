@@ -8,10 +8,9 @@ part 'project_response.mapper.dart';
 @MappableClass(ignoreNull: true, discriminatorKey: 'type')
 sealed class ProjectResponse with ProjectResponseMappable {
   final String projectPath;
-
   const ProjectResponse({
     required this.projectPath,
-  });
+   });
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: 'data')
@@ -19,11 +18,14 @@ class ProjectData extends ProjectResponse with ProjectDataMappable {
   final LocmateSettingsModel? locmateSettingsModel;
   final L10nYamlModel l10nYaml;
   final List<ArbFileEntity> arbFileEntities;
+  final String? pubspecProjectName;
+
   const ProjectData({
     required this.locmateSettingsModel,
     required super.projectPath,
     required this.l10nYaml,
     required this.arbFileEntities,
+    this.pubspecProjectName,
   });
 }
 

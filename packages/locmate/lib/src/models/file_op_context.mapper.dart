@@ -13,7 +13,8 @@ class FileOpContextMapper extends ClassMapperBase<FileOpContext> {
   static FileOpContextMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = FileOpContextMapper._());
-      FileOpContextWriteMapper.ensureInitialized();
+      FileOpContextWriteMapMapper.ensureInitialized();
+      FileOpContextWriteStringMapper.ensureInitialized();
       FileOpContextDeleteMapper.ensureInitialized();
       FileOpContextReadMapper.ensureInitialized();
     }
@@ -23,8 +24,13 @@ class FileOpContextMapper extends ClassMapperBase<FileOpContext> {
   @override
   final String id = 'FileOpContext';
 
+  static String _$path(FileOpContext v) => v.path;
+  static const Field<FileOpContext, String> _f$path = Field('path', _$path);
+
   @override
-  final MappableFields<FileOpContext> fields = const {};
+  final MappableFields<FileOpContext> fields = const {
+    #path: _f$path,
+  };
 
   static FileOpContext _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
@@ -52,34 +58,35 @@ mixin FileOpContextMappable {
 
 abstract class FileOpContextCopyWith<$R, $In extends FileOpContext, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call();
+  $R call({String? path});
   FileOpContextCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class FileOpContextWriteMapper extends SubClassMapperBase<FileOpContextWrite> {
-  FileOpContextWriteMapper._();
+class FileOpContextWriteMapMapper
+    extends SubClassMapperBase<FileOpContextWriteMap> {
+  FileOpContextWriteMapMapper._();
 
-  static FileOpContextWriteMapper? _instance;
-  static FileOpContextWriteMapper ensureInitialized() {
+  static FileOpContextWriteMapMapper? _instance;
+  static FileOpContextWriteMapMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = FileOpContextWriteMapper._());
+      MapperContainer.globals.use(_instance = FileOpContextWriteMapMapper._());
       FileOpContextMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
 
   @override
-  final String id = 'FileOpContextWrite';
+  final String id = 'FileOpContextWriteMap';
 
-  static String _$path(FileOpContextWrite v) => v.path;
-  static const Field<FileOpContextWrite, String> _f$path =
+  static String _$path(FileOpContextWriteMap v) => v.path;
+  static const Field<FileOpContextWriteMap, String> _f$path =
       Field('path', _$path);
-  static String _$content(FileOpContextWrite v) => v.content;
-  static const Field<FileOpContextWrite, String> _f$content =
+  static Map<String, dynamic> _$content(FileOpContextWriteMap v) => v.content;
+  static const Field<FileOpContextWriteMap, Map<String, dynamic>> _f$content =
       Field('content', _$content);
 
   @override
-  final MappableFields<FileOpContextWrite> fields = const {
+  final MappableFields<FileOpContextWriteMap> fields = const {
     #path: _f$path,
     #content: _f$content,
   };
@@ -87,97 +94,238 @@ class FileOpContextWriteMapper extends SubClassMapperBase<FileOpContextWrite> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'write';
+  final dynamic discriminatorValue = 'write_map';
   @override
   late final ClassMapperBase superMapper =
       FileOpContextMapper.ensureInitialized();
 
-  static FileOpContextWrite _instantiate(DecodingData data) {
-    return FileOpContextWrite(
+  static FileOpContextWriteMap _instantiate(DecodingData data) {
+    return FileOpContextWriteMap(
         path: data.dec(_f$path), content: data.dec(_f$content));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static FileOpContextWrite fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<FileOpContextWrite>(map);
+  static FileOpContextWriteMap fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<FileOpContextWriteMap>(map);
   }
 
-  static FileOpContextWrite fromJson(String json) {
-    return ensureInitialized().decodeJson<FileOpContextWrite>(json);
+  static FileOpContextWriteMap fromJson(String json) {
+    return ensureInitialized().decodeJson<FileOpContextWriteMap>(json);
   }
 }
 
-mixin FileOpContextWriteMappable {
+mixin FileOpContextWriteMapMappable {
   String toJson() {
-    return FileOpContextWriteMapper.ensureInitialized()
-        .encodeJson<FileOpContextWrite>(this as FileOpContextWrite);
+    return FileOpContextWriteMapMapper.ensureInitialized()
+        .encodeJson<FileOpContextWriteMap>(this as FileOpContextWriteMap);
   }
 
   Map<String, dynamic> toMap() {
-    return FileOpContextWriteMapper.ensureInitialized()
-        .encodeMap<FileOpContextWrite>(this as FileOpContextWrite);
+    return FileOpContextWriteMapMapper.ensureInitialized()
+        .encodeMap<FileOpContextWriteMap>(this as FileOpContextWriteMap);
   }
 
-  FileOpContextWriteCopyWith<FileOpContextWrite, FileOpContextWrite,
-          FileOpContextWrite>
-      get copyWith => _FileOpContextWriteCopyWithImpl<FileOpContextWrite,
-          FileOpContextWrite>(this as FileOpContextWrite, $identity, $identity);
+  FileOpContextWriteMapCopyWith<FileOpContextWriteMap, FileOpContextWriteMap,
+      FileOpContextWriteMap> get copyWith => _FileOpContextWriteMapCopyWithImpl<
+          FileOpContextWriteMap, FileOpContextWriteMap>(
+      this as FileOpContextWriteMap, $identity, $identity);
   @override
   String toString() {
-    return FileOpContextWriteMapper.ensureInitialized()
-        .stringifyValue(this as FileOpContextWrite);
+    return FileOpContextWriteMapMapper.ensureInitialized()
+        .stringifyValue(this as FileOpContextWriteMap);
   }
 
   @override
   bool operator ==(Object other) {
-    return FileOpContextWriteMapper.ensureInitialized()
-        .equalsValue(this as FileOpContextWrite, other);
+    return FileOpContextWriteMapMapper.ensureInitialized()
+        .equalsValue(this as FileOpContextWriteMap, other);
   }
 
   @override
   int get hashCode {
-    return FileOpContextWriteMapper.ensureInitialized()
-        .hashValue(this as FileOpContextWrite);
+    return FileOpContextWriteMapMapper.ensureInitialized()
+        .hashValue(this as FileOpContextWriteMap);
   }
 }
 
-extension FileOpContextWriteValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, FileOpContextWrite, $Out> {
-  FileOpContextWriteCopyWith<$R, FileOpContextWrite, $Out>
-      get $asFileOpContextWrite => $base.as(
-          (v, t, t2) => _FileOpContextWriteCopyWithImpl<$R, $Out>(v, t, t2));
+extension FileOpContextWriteMapValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, FileOpContextWriteMap, $Out> {
+  FileOpContextWriteMapCopyWith<$R, FileOpContextWriteMap, $Out>
+      get $asFileOpContextWriteMap => $base.as(
+          (v, t, t2) => _FileOpContextWriteMapCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
-abstract class FileOpContextWriteCopyWith<$R, $In extends FileOpContextWrite,
+abstract class FileOpContextWriteMapCopyWith<
+    $R,
+    $In extends FileOpContextWriteMap,
     $Out> implements FileOpContextCopyWith<$R, $In, $Out> {
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+      get content;
   @override
-  $R call({String? path, String? content});
-  FileOpContextWriteCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+  $R call({String? path, Map<String, dynamic>? content});
+  FileOpContextWriteMapCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
 
-class _FileOpContextWriteCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, FileOpContextWrite, $Out>
-    implements FileOpContextWriteCopyWith<$R, FileOpContextWrite, $Out> {
-  _FileOpContextWriteCopyWithImpl(super.value, super.then, super.then2);
+class _FileOpContextWriteMapCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, FileOpContextWriteMap, $Out>
+    implements FileOpContextWriteMapCopyWith<$R, FileOpContextWriteMap, $Out> {
+  _FileOpContextWriteMapCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<FileOpContextWrite> $mapper =
-      FileOpContextWriteMapper.ensureInitialized();
+  late final ClassMapperBase<FileOpContextWriteMap> $mapper =
+      FileOpContextWriteMapMapper.ensureInitialized();
   @override
-  $R call({String? path, String? content}) => $apply(FieldCopyWithData(
-      {if (path != null) #path: path, if (content != null) #content: content}));
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+      get content => MapCopyWith($value.content,
+          (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(content: v));
   @override
-  FileOpContextWrite $make(CopyWithData data) => FileOpContextWrite(
+  $R call({String? path, Map<String, dynamic>? content}) =>
+      $apply(FieldCopyWithData({
+        if (path != null) #path: path,
+        if (content != null) #content: content
+      }));
+  @override
+  FileOpContextWriteMap $make(CopyWithData data) => FileOpContextWriteMap(
       path: data.get(#path, or: $value.path),
       content: data.get(#content, or: $value.content));
 
   @override
-  FileOpContextWriteCopyWith<$R2, FileOpContextWrite, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _FileOpContextWriteCopyWithImpl<$R2, $Out2>($value, $cast, t);
+  FileOpContextWriteMapCopyWith<$R2, FileOpContextWriteMap, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _FileOpContextWriteMapCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
+class FileOpContextWriteStringMapper
+    extends SubClassMapperBase<FileOpContextWriteString> {
+  FileOpContextWriteStringMapper._();
+
+  static FileOpContextWriteStringMapper? _instance;
+  static FileOpContextWriteStringMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = FileOpContextWriteStringMapper._());
+      FileOpContextMapper.ensureInitialized().addSubMapper(_instance!);
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'FileOpContextWriteString';
+
+  static String _$path(FileOpContextWriteString v) => v.path;
+  static const Field<FileOpContextWriteString, String> _f$path =
+      Field('path', _$path);
+  static String _$content(FileOpContextWriteString v) => v.content;
+  static const Field<FileOpContextWriteString, String> _f$content =
+      Field('content', _$content);
+
+  @override
+  final MappableFields<FileOpContextWriteString> fields = const {
+    #path: _f$path,
+    #content: _f$content,
+  };
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'write_string';
+  @override
+  late final ClassMapperBase superMapper =
+      FileOpContextMapper.ensureInitialized();
+
+  static FileOpContextWriteString _instantiate(DecodingData data) {
+    return FileOpContextWriteString(
+        path: data.dec(_f$path), content: data.dec(_f$content));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static FileOpContextWriteString fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<FileOpContextWriteString>(map);
+  }
+
+  static FileOpContextWriteString fromJson(String json) {
+    return ensureInitialized().decodeJson<FileOpContextWriteString>(json);
+  }
+}
+
+mixin FileOpContextWriteStringMappable {
+  String toJson() {
+    return FileOpContextWriteStringMapper.ensureInitialized()
+        .encodeJson<FileOpContextWriteString>(this as FileOpContextWriteString);
+  }
+
+  Map<String, dynamic> toMap() {
+    return FileOpContextWriteStringMapper.ensureInitialized()
+        .encodeMap<FileOpContextWriteString>(this as FileOpContextWriteString);
+  }
+
+  FileOpContextWriteStringCopyWith<FileOpContextWriteString,
+          FileOpContextWriteString, FileOpContextWriteString>
+      get copyWith => _FileOpContextWriteStringCopyWithImpl<
+              FileOpContextWriteString, FileOpContextWriteString>(
+          this as FileOpContextWriteString, $identity, $identity);
+  @override
+  String toString() {
+    return FileOpContextWriteStringMapper.ensureInitialized()
+        .stringifyValue(this as FileOpContextWriteString);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return FileOpContextWriteStringMapper.ensureInitialized()
+        .equalsValue(this as FileOpContextWriteString, other);
+  }
+
+  @override
+  int get hashCode {
+    return FileOpContextWriteStringMapper.ensureInitialized()
+        .hashValue(this as FileOpContextWriteString);
+  }
+}
+
+extension FileOpContextWriteStringValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, FileOpContextWriteString, $Out> {
+  FileOpContextWriteStringCopyWith<$R, FileOpContextWriteString, $Out>
+      get $asFileOpContextWriteString => $base.as((v, t, t2) =>
+          _FileOpContextWriteStringCopyWithImpl<$R, $Out>(v, t, t2));
+}
+
+abstract class FileOpContextWriteStringCopyWith<
+    $R,
+    $In extends FileOpContextWriteString,
+    $Out> implements FileOpContextCopyWith<$R, $In, $Out> {
+  @override
+  $R call({String? path, String? content});
+  FileOpContextWriteStringCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _FileOpContextWriteStringCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, FileOpContextWriteString, $Out>
+    implements
+        FileOpContextWriteStringCopyWith<$R, FileOpContextWriteString, $Out> {
+  _FileOpContextWriteStringCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<FileOpContextWriteString> $mapper =
+      FileOpContextWriteStringMapper.ensureInitialized();
+  @override
+  $R call({String? path, String? content}) => $apply(FieldCopyWithData(
+      {if (path != null) #path: path, if (content != null) #content: content}));
+  @override
+  FileOpContextWriteString $make(CopyWithData data) => FileOpContextWriteString(
+      path: data.get(#path, or: $value.path),
+      content: data.get(#content, or: $value.content));
+
+  @override
+  FileOpContextWriteStringCopyWith<$R2, FileOpContextWriteString, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _FileOpContextWriteStringCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class FileOpContextDeleteMapper

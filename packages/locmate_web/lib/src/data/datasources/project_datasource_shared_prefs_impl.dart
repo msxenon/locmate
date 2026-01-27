@@ -11,9 +11,17 @@ class ProjectDatasourceSharedPrefsImpl extends ProjectDataSource {
   @override
   Future<OpResponse> fileOp(FileOpContext fileOpContext) async {
     switch (fileOpContext) {
-      case FileOpContextWrite fileOpContextWrite:
+      case FileOpContextWriteMap():
         await _sharedPrefrencesWrapper.setString(
-            fileOpContextWrite.path, fileOpContextWrite.content);
+          fileOpContext.path,
+          JsonStringMapper.mapToString(fileOpContext.content),
+        );
+        return VoidOpResponse();
+      case FileOpContextWriteString():
+        await _sharedPrefrencesWrapper.setString(
+          fileOpContext.path,
+          fileOpContext.content,
+        );
         return VoidOpResponse();
       case FileOpContextRead fileOpContextRead:
         final fileContent =

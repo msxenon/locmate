@@ -14,10 +14,10 @@ class Navigation {
     );
   }
 
-  Future<void> addNewLang(
+  Future<String?> addNewLang(
     BuildContext context,
   ) async {
-    await WoltModalSheetHelper.show<String>(
+    return await WoltModalSheetHelper.show<String>(
       context,
       (context) => [
         AddNewLangPageSheet().build(context),

@@ -7,7 +7,6 @@ import 'package:locmate_web/src/data/datasources/project_datasource.dart';
 class ProjectDatasourceServerImpl extends ProjectDataSource {
   ProjectDatasourceServerImpl();
   final dio = Dio(BaseOptions(
-    baseUrl: UrlPaths.baseUrl,
     connectTimeout: Duration(seconds: 2),
     receiveTimeout: Duration(seconds: 2),
     headers: <String, String>{
@@ -20,7 +19,7 @@ class ProjectDatasourceServerImpl extends ProjectDataSource {
     final response = await dio
         .post(
           UrlPaths.fileOperation,
-          data: fileOpContext.toJson(),
+          data: fileOpContext.toMap(),
         )
         .fromJson(OpResponseMapper.fromMap);
 
@@ -49,7 +48,7 @@ class ProjectDatasourceServerImpl extends ProjectDataSource {
     final response = await dio
         .post(
           UrlPaths.dirOperation,
-          data: dirOpContext.toJson(),
+          data: dirOpContext.toMap(),
         )
         .fromJson(OpResponseMapper.fromMap);
 
@@ -62,13 +61,12 @@ class ProjectDatasourceServerImpl extends ProjectDataSource {
 
   @override
   Future<StringOpResponse> version() {
-    return dio
-        .get(UrlPaths.version)
-        .fromJson(StringOpResponseMapper.fromMap)
-        .then((response) => response.fold((l) {
-              throw '${l.message()}: ${dio.options.baseUrl}';
-            }, (r) {
-              return r;
-            }));
+    return dio.get(UrlPaths.version).fromJson((e) {
+      return StringOpResponse(response: '${e['version']}+${e['build_number']}');
+    }).then((response) => response.fold((l) {
+          throw '${l.message()}: ${dio.options.baseUrl}';
+        }, (r) {
+          return r;
+        }));
   }
 }

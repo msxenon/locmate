@@ -8,15 +8,11 @@ class LocmateSettingsModel with LocmateSettingsModelMappable {
   final KeyFormat? keyFormat;
   final List<String>? localesOrder;
   static String defaultFileName = 'locmate.json';
-  static LocmateSettingsModel defaultValues() => LocmateSettingsModel(
-        projectName: 'Untitled',
-        keyFormat: KeyFormat.none,
-      );
 
   const LocmateSettingsModel({
-    required this.projectName,
-    required this.keyFormat,
+    this.keyFormat = KeyFormat.none,
     this.localesOrder,
+    this.projectName,
   });
 
   static LocmateSettingsModel? tryFromJson(String? fileToMap) {

@@ -97,6 +97,9 @@ class ProjectDataMapper extends SubClassMapperBase<ProjectData> {
       v.arbFileEntities;
   static const Field<ProjectData, List<ArbFileEntity>> _f$arbFileEntities =
       Field('arbFileEntities', _$arbFileEntities);
+  static String? _$pubspecProjectName(ProjectData v) => v.pubspecProjectName;
+  static const Field<ProjectData, String> _f$pubspecProjectName =
+      Field('pubspecProjectName', _$pubspecProjectName, opt: true);
 
   @override
   final MappableFields<ProjectData> fields = const {
@@ -104,6 +107,7 @@ class ProjectDataMapper extends SubClassMapperBase<ProjectData> {
     #projectPath: _f$projectPath,
     #l10nYaml: _f$l10nYaml,
     #arbFileEntities: _f$arbFileEntities,
+    #pubspecProjectName: _f$pubspecProjectName,
   };
   @override
   final bool ignoreNull = true;
@@ -121,7 +125,8 @@ class ProjectDataMapper extends SubClassMapperBase<ProjectData> {
         locmateSettingsModel: data.dec(_f$locmateSettingsModel),
         projectPath: data.dec(_f$projectPath),
         l10nYaml: data.dec(_f$l10nYaml),
-        arbFileEntities: data.dec(_f$arbFileEntities));
+        arbFileEntities: data.dec(_f$arbFileEntities),
+        pubspecProjectName: data.dec(_f$pubspecProjectName));
   }
 
   @override
@@ -187,7 +192,8 @@ abstract class ProjectDataCopyWith<$R, $In extends ProjectData, $Out>
       {LocmateSettingsModel? locmateSettingsModel,
       String? projectPath,
       L10nYamlModel? l10nYaml,
-      List<ArbFileEntity>? arbFileEntities});
+      List<ArbFileEntity>? arbFileEntities,
+      String? pubspecProjectName});
   ProjectDataCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -216,13 +222,15 @@ class _ProjectDataCopyWithImpl<$R, $Out>
           {Object? locmateSettingsModel = $none,
           String? projectPath,
           L10nYamlModel? l10nYaml,
-          List<ArbFileEntity>? arbFileEntities}) =>
+          List<ArbFileEntity>? arbFileEntities,
+          Object? pubspecProjectName = $none}) =>
       $apply(FieldCopyWithData({
         if (locmateSettingsModel != $none)
           #locmateSettingsModel: locmateSettingsModel,
         if (projectPath != null) #projectPath: projectPath,
         if (l10nYaml != null) #l10nYaml: l10nYaml,
-        if (arbFileEntities != null) #arbFileEntities: arbFileEntities
+        if (arbFileEntities != null) #arbFileEntities: arbFileEntities,
+        if (pubspecProjectName != $none) #pubspecProjectName: pubspecProjectName
       }));
   @override
   ProjectData $make(CopyWithData data) => ProjectData(
@@ -230,7 +238,9 @@ class _ProjectDataCopyWithImpl<$R, $Out>
           data.get(#locmateSettingsModel, or: $value.locmateSettingsModel),
       projectPath: data.get(#projectPath, or: $value.projectPath),
       l10nYaml: data.get(#l10nYaml, or: $value.l10nYaml),
-      arbFileEntities: data.get(#arbFileEntities, or: $value.arbFileEntities));
+      arbFileEntities: data.get(#arbFileEntities, or: $value.arbFileEntities),
+      pubspecProjectName:
+          data.get(#pubspecProjectName, or: $value.pubspecProjectName));
 
   @override
   ProjectDataCopyWith<$R2, ProjectData, $Out2> $chain<$R2, $Out2>(

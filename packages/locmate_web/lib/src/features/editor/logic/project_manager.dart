@@ -11,6 +11,7 @@ import 'package:locmate_web/src/data/models/project_response.dart';
 import 'package:locmate_web/src/data/repositories/project_repository.dart';
 import 'package:locmate_web/src/features/editor/logic/locmate_settings_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:yaml/yaml.dart';
 
 part 'project_manager.g.dart';
 
@@ -33,9 +34,10 @@ class ProjectManager extends _$ProjectManager {
         projectPath: x,
         l10nYaml: l10nYaml,
         arbFileEntities: await loadString(
-            projectPath: x,
-            arbDir: l10nYaml.arbDir,
-            locmateModel: locmateSettingsModel),
+          projectPath: x,
+          arbDir: l10nYaml.arbDir,
+          locmateModel: locmateSettingsModel,
+        ),
       );
     } catch (e) {
       return ProjectEmpty(projectPath: x);
@@ -68,49 +70,39 @@ class ProjectManager extends _$ProjectManager {
     if (fullPath == null) {
       return;
     }
-    ref
+    await ref
         .read(projectRepositoryProvider)
-        .createFile(path: fullPath, content: jsonEncode({'@@locale': locale}));
+        .saveArbFileContent(fullPath, {'@@locale': locale});
+
     ref.invalidateSelf();
   }
 
   Future<void> saveLocmateModel(
     LocmateSettingsModel locmateSettingsModel,
   ) async {
-    await ref.read(projectDatasourceProvider).fileOp(
-          FileOpContextWrite(
-            content: locmateSettingsModel.toJson(),
-            path: LocmateSettingsModel.defaultFileName,
-          ),
-        );
+    await ref
+        .read(projectRepositoryProvider)
+        .saveLocmateModel(locmateSettingsModel);
 
     ref.invalidateSelf();
   }
 
-  void createDemoProject() async {
+  Future<void> createNewProject() async {
+    final pubspecProjectName = await getPubspecProjectName();
     final demoLocmateYaml = LocmateSettingsModel(
-        projectName: 'Demo project',
+        projectName: pubspecProjectName ?? 'New project',
         keyFormat: KeyFormat.camelCase,
-        localesOrder: []);
+        localesOrder: ['en']);
     final demoL10nYaml =
-        L10nYamlModel(arbDir: '', templateArbFile: 'app_en.arb');
-    final arbFileEn = 'app_en.arb';
-    final arbFileAr = 'app_ar.arb';
+        L10nYamlModel(arbDir: 'lib/l10n', templateArbFile: 'app_en.arb');
+    final arbFileEn = '${demoL10nYaml.arbDir}/app_en.arb';
 
     await ref.read(projectRepositoryProvider).saveLocmateModel(demoLocmateYaml);
     await ref.read(projectRepositoryProvider).saveL10nModel(demoL10nYaml);
-    await ref.read(projectDatasourceProvider).fileOp(
-          FileOpContextWrite(
-            path: arbFileAr,
-            content: jsonEncode({'@@locale': 'ar'}),
-          ),
-        );
-    await ref.read(projectDatasourceProvider).fileOp(
-          FileOpContextWrite(
-            path: arbFileEn,
-            content: jsonEncode({'@@locale': 'en'}),
-          ),
-        );
+    await ref.read(projectRepositoryProvider).saveArbFileContent(
+      arbFileEn,
+      {'@@locale': 'en'},
+    );
     ref.invalidateSelf();
   }
 
@@ -167,5 +159,16 @@ class ProjectManager extends _$ProjectManager {
     }
 
     return result;
+  }
+
+  Future<String?> getPubspecProjectName() async {
+    final pubspec =
+        await ref.read(projectRepositoryProvider).getProjectPubspec();
+    if (pubspec == null) {
+      return null;
+    }
+    final yaml = loadYaml(pubspec);
+    final map = Map<String, dynamic>.from(yaml);
+    return map['name'];
   }
 }

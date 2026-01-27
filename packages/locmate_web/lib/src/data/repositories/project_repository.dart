@@ -9,12 +9,12 @@ part 'project_repository.g.dart';
 ProjectRepository projectRepository(Ref ref) => ProjectRepositoryImpl(ref);
 
 abstract class ProjectRepository {
-  final Ref ref;
-  ProjectRepository(this.ref);
+  ProjectRepository();
   Future<void> saveLocmateModel(LocmateSettingsModel locmateSettingsModel);
   Future<LocmateSettingsModel?> getLocmateModel();
   Future<void> saveL10nModel(L10nYamlModel l10nYaml);
   Future<L10nYamlModel?> getL10nModel();
-  Future<void> createFile({required String path, required String content});
   Future<List<String>> listArbFiles(String fullArbDirPath);
+  Future<void> saveArbFileContent(String path, Map<String, dynamic> content);
+  Future<String?> getProjectPubspec();
 }

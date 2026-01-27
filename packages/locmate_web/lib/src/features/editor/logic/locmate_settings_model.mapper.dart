@@ -21,30 +21,30 @@ class LocmateSettingsModelMapper extends ClassMapperBase<LocmateSettingsModel> {
   @override
   final String id = 'LocmateSettingsModel';
 
-  static String? _$projectName(LocmateSettingsModel v) => v.projectName;
-  static const Field<LocmateSettingsModel, String> _f$projectName =
-      Field('projectName', _$projectName);
   static KeyFormat? _$keyFormat(LocmateSettingsModel v) => v.keyFormat;
   static const Field<LocmateSettingsModel, KeyFormat> _f$keyFormat =
-      Field('keyFormat', _$keyFormat);
+      Field('keyFormat', _$keyFormat, opt: true, def: KeyFormat.none);
   static List<String>? _$localesOrder(LocmateSettingsModel v) => v.localesOrder;
   static const Field<LocmateSettingsModel, List<String>> _f$localesOrder =
       Field('localesOrder', _$localesOrder, opt: true);
+  static String? _$projectName(LocmateSettingsModel v) => v.projectName;
+  static const Field<LocmateSettingsModel, String> _f$projectName =
+      Field('projectName', _$projectName, opt: true);
 
   @override
   final MappableFields<LocmateSettingsModel> fields = const {
-    #projectName: _f$projectName,
     #keyFormat: _f$keyFormat,
     #localesOrder: _f$localesOrder,
+    #projectName: _f$projectName,
   };
   @override
   final bool ignoreNull = true;
 
   static LocmateSettingsModel _instantiate(DecodingData data) {
     return LocmateSettingsModel(
-        projectName: data.dec(_f$projectName),
         keyFormat: data.dec(_f$keyFormat),
-        localesOrder: data.dec(_f$localesOrder));
+        localesOrder: data.dec(_f$localesOrder),
+        projectName: data.dec(_f$projectName));
   }
 
   @override
@@ -107,7 +107,7 @@ abstract class LocmateSettingsModelCopyWith<
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get localesOrder;
   $R call(
-      {String? projectName, KeyFormat? keyFormat, List<String>? localesOrder});
+      {KeyFormat? keyFormat, List<String>? localesOrder, String? projectName});
   LocmateSettingsModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -130,19 +130,19 @@ class _LocmateSettingsModelCopyWithImpl<$R, $Out>
           : null;
   @override
   $R call(
-          {Object? projectName = $none,
-          Object? keyFormat = $none,
-          Object? localesOrder = $none}) =>
+          {Object? keyFormat = $none,
+          Object? localesOrder = $none,
+          Object? projectName = $none}) =>
       $apply(FieldCopyWithData({
-        if (projectName != $none) #projectName: projectName,
         if (keyFormat != $none) #keyFormat: keyFormat,
-        if (localesOrder != $none) #localesOrder: localesOrder
+        if (localesOrder != $none) #localesOrder: localesOrder,
+        if (projectName != $none) #projectName: projectName
       }));
   @override
   LocmateSettingsModel $make(CopyWithData data) => LocmateSettingsModel(
-      projectName: data.get(#projectName, or: $value.projectName),
       keyFormat: data.get(#keyFormat, or: $value.keyFormat),
-      localesOrder: data.get(#localesOrder, or: $value.localesOrder));
+      localesOrder: data.get(#localesOrder, or: $value.localesOrder),
+      projectName: data.get(#projectName, or: $value.projectName));
 
   @override
   LocmateSettingsModelCopyWith<$R2, LocmateSettingsModel, $Out2>

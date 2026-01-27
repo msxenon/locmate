@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:locmate/locmate.dart';
 import 'package:locmate_web/src/core/logger/logger_service.dart';
 import 'package:locmate_web/src/data/datasources/project_datasource.dart';
@@ -6,7 +7,8 @@ import 'package:locmate_web/src/data/repositories/project_repository.dart';
 import 'package:locmate_web/src/features/editor/logic/locmate_settings_model.dart';
 
 class ProjectRepositoryImpl extends ProjectRepository {
-  ProjectRepositoryImpl(super.ref);
+  final Ref ref;
+  ProjectRepositoryImpl(this.ref);
   ProjectDataSource get _projectDatasourceProvider =>
       ref.read(projectDatasourceProvider);
   @override
@@ -51,8 +53,8 @@ class ProjectRepositoryImpl extends ProjectRepository {
   @override
   Future<void> saveL10nModel(L10nYamlModel l10nYaml) {
     return _projectDatasourceProvider.fileOp(
-      FileOpContextWrite(
-        content: l10nYaml.toJson(),
+      FileOpContextWriteString(
+        content: l10nYaml.toYamlContent(),
         path: L10nYamlModel.defaultFileName,
       ),
     );
@@ -61,19 +63,9 @@ class ProjectRepositoryImpl extends ProjectRepository {
   @override
   Future<void> saveLocmateModel(LocmateSettingsModel locmateSettingsModel) {
     return _projectDatasourceProvider.fileOp(
-      FileOpContextWrite(
-        content: locmateSettingsModel.toJson(),
+      FileOpContextWriteMap(
+        content: locmateSettingsModel.toMap(),
         path: LocmateSettingsModel.defaultFileName,
-      ),
-    );
-  }
-
-  @override
-  Future<void> createFile({required String path, required String content}) {
-    return _projectDatasourceProvider.fileOp(
-      FileOpContextWrite(
-        content: content,
-        path: path,
       ),
     );
   }
@@ -88,5 +80,34 @@ class ProjectRepositoryImpl extends ProjectRepository {
       }
       return <String>[];
     });
+  }
+
+  @override
+  Future<void> saveArbFileContent(String path, Map<String, dynamic> content) {
+    return ref.read(projectDatasourceProvider).fileOp(
+          FileOpContextWriteMap(
+            path: path,
+            content: content,
+          ),
+        );
+  }
+
+  @override
+  Future<String?> getProjectPubspec() async {
+    try {
+      final opResponse = await _projectDatasourceProvider
+          .fileOp(FileOpContextRead(path: 'pubspec.yaml'));
+      if (opResponse is StringOpResponse) {
+        return opResponse.response;
+      }
+      return null;
+    } catch (e, s) {
+      LoggerService.instance.web.e(
+        'Error while reading l10n model',
+        error: e,
+        stackTrace: s,
+      );
+      return null;
+    }
   }
 }

@@ -36,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
             minimum: EdgeInsets.all(8),
             child: child ?? SizedBox(),
           ),
-          bottomNavigationBar: const AppVersionWidget(),
+          bottomNavigationBar: SafeArea(child: const AppVersionWidget()),
         );
       },
     );

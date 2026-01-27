@@ -12,7 +12,7 @@ class CreateProjectWidget extends ConsumerWidget {
       children: [
         TextButton(
           onPressed: () {
-            ref.read(projectManagerProvider.notifier).createDemoProject();
+            ref.read(projectManagerProvider.notifier).createNewProject();
           },
           child: Text('Create project'),
         ),

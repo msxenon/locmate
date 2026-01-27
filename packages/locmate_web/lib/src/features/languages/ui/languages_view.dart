@@ -106,7 +106,7 @@ class _LangsDataWidgetState extends ConsumerState<LangsDataWidget> {
                   children: {
                     MainTabs.all: Text('All (${data.allKeysCount})'),
                     MainTabs.uncompleted: Text('Uncompleted (${data.uncompleted.length})'),
-                    MainTabs.warnings: Text('Proplems (${data.problems.length})'),
+                    MainTabs.warnings: Text('Problems (${data.problems.length})'),
                     MainTabs.selected: Text('Selected (${data.selectedKeysCount})'),
                   },
                   decoration: BoxDecoration(

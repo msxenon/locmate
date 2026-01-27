@@ -1,13 +1,15 @@
-import 'package:locmate/locmate.dart';
 import 'package:locmate_web/src/core/logger/logger_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web/web.dart';
 
 class ServerLogsListener {
   late final WebSocketChannel _channel;
 
   void init() {
+    final origin = window.location.origin;
+
     _channel = WebSocketChannel.connect(
-      Uri.parse('ws://localhost:${UrlPaths.port}/logs'),
+      Uri.parse(origin).replace(scheme: 'ws', path: 'logs'),
     );
 
     _channel.stream.listen((message) {
