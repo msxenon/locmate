@@ -5,33 +5,51 @@ import 'package:host_bridge/host_bridge.dart';
 /// Helper to run the locmate CLI server via host_bridge and capture its listening URL.
 /// Works in browser/patrol tests where dart:io Process is unavailable.
 class LocmateCliHelper {
+  final _hostBridgeUrl =
+      const String.fromEnvironment('HOST_BRIDGE_URL', defaultValue: '');
+  late final client = HostBridgeClient(_hostBridgeUrl);
+
   /// Matches http://host:port only (no trailing punctuation like period).
   static final _urlPattern = RegExp(r'http://[a-zA-Z0-9.]+:\d+');
 
   /// Starts the locmate server on the host via host_bridge, listens to the output
   /// stream until "Listening on" URL is seen, then closes the stream and returns
   /// [LocmateServer]. The process keeps running; use [LocmateServer.kill] to stop it.
-  static Future<LocmateServer> runLocmateCli() async {
-    final hostBridgeUrl =
-        const String.fromEnvironment('HOST_BRIDGE_URL', defaultValue: '');
+  Future<LocmateServer> runLocmateCli(String inPath) async {
     final locmateDir =
         const String.fromEnvironment('LOCMATE_PACKAGE_PATH', defaultValue: '');
-    if (hostBridgeUrl.isEmpty || locmateDir.isEmpty) {
+    if (_hostBridgeUrl.isEmpty || locmateDir.isEmpty) {
       throw StateError(
         'HOST_BRIDGE_URL and LOCMATE_PACKAGE_PATH must be set (via --dart-define)',
       );
     }
 
-    final client = HostBridgeClient(hostBridgeUrl);
-
     final completer = Completer<LocmateServer>();
     int? pid;
     final buffer = StringBuffer();
 
+    // Activate locmate from path, then run it via global
+    await client.runCommand(
+      RunCommandRequestModel(
+        command: 'cd "$locmateDir" && dart pub global activate --source path .',
+        workingDirectory: null,
+        timeoutSeconds: 60,
+      ),
+    );
+
+    // Create sandbox dir if it doesn't exist (-p: no error if exists, create parents)
+    await client.runCommand(
+      RunCommandRequestModel(
+        command: 'mkdir -p $inPath',
+        workingDirectory: null,
+        timeoutSeconds: 10,
+      ),
+    );
+
     final stream = client.runAdvancedCommand(
       RunCommandRequestModel(
-        command: 'cd "$locmateDir" && dart run locmate',
-        workingDirectory: null,
+        command: 'dart pub global run locmate',
+        workingDirectory: inPath,
         timeoutSeconds: 60,
       ),
     );
@@ -92,6 +110,12 @@ class LocmateCliHelper {
           'Locmate did not print listening URL within 30s',
         );
       },
+    );
+  }
+
+  Future<void> deleteInPathDirs(String inPath) async {
+    await client.runCommand(
+      RunCommandRequestModel(command: 'rm -rf $inPath'),
     );
   }
 }
