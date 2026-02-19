@@ -1,18 +1,25 @@
-// ignore_for_file: invalid_use_of_visible_for_testing_member
+// ignore_for_file: invalid_use_of_visible_for_testing_member, depend_on_referenced_packages
 
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:host_bridge/host_bridge.dart';
-import 'test_utils/screenshot_wrapper_widget.dart';
+import 'package:patrol/patrol.dart';
+import 'package:meta/meta.dart';
+
+import 'screenshot_wrapper_widget.dart';
 
 /// Takes a screenshot from the current [WidgetTester] and saves it via host_bridge.
 /// Encodes PNG bytes as base64, writes to a temp .b64 file, then runs a command
 /// on the host to decode to the final .png (since host_bridge only supports string file writes).
-Future<void> takeScreenshot(WidgetTester tester, String testName) async {
+Future<void> takeScreenshot(
+  PatrolIntegrationTester tester,
+  String testName,
+) async {
   try {
-    final screenshotWrapperWidget = tester.state<ScreenshotWrapperWidgetState>(
-        find.byType(ScreenshotWrapperWidget));
+    final screenshotWrapperWidget = tester.tester
+        .state<ScreenshotWrapperWidgetState>(
+            find.byType(ScreenshotWrapperWidget));
     final screenshotController = screenshotWrapperWidget.screenshotController;
     final sanitized = _sanitizeFileName(testName);
 
@@ -55,29 +62,21 @@ String _sanitizeFileName(String name) {
       .toLowerCase();
 }
 
-/// Runs [body] and registers a tearDown that takes a screenshot if the test fails.
-/// Use inside [patrolTest]:
-///   patrolTest('my test', ($) async {
-///     await runWithScreenshotOnFail($, 'my test', ($) async {
-///       // test body
-///     });
-///   });
-Future<void> runWithScreenshotOnFail(
-  dynamic $, // PatrolIntegrationTester
+@isTest
+void patrolTestWithScreenshotOnFail(
   String testDescription,
-  Future<void> Function(dynamic $) body,
+  PatrolTesterCallback body,
 ) async {
-  final tester = $.tester as WidgetTester;
-  var failed = false;
-  addTearDown(() async {
-    if (failed) {
-      await takeScreenshot(tester, testDescription);
-    }
-  });
+  PatrolIntegrationTester? tester;
   try {
-    await body($);
-  } catch (e) {
-    failed = true;
+    patrolTest(testDescription, ($) {
+      tester = $;
+      return body($);
+    });
+  } catch (_) {
+    if (tester != null) {
+      await takeScreenshot(tester!, testDescription);
+    }
     rethrow;
   }
 }

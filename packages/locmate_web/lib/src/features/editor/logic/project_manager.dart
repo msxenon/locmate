@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:locmate/locmate.dart';
 import 'package:locmate_web/src/core/constants.dart';
 import 'package:locmate_web/src/core/logger/logger_service.dart';
@@ -40,6 +41,9 @@ class ProjectManager extends _$ProjectManager {
         ),
       );
     } catch (e) {
+      if (!kReleaseMode ) {
+        rethrow;
+      }
       return ProjectEmpty(projectPath: x);
     }
   }

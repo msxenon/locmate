@@ -43,3 +43,6 @@ scripts:
 
   kClean:
     run: melos exec flutter clean
+
+  patrolTest:
+    run: sh packages/locmate_web/patrol_test/run.sh
