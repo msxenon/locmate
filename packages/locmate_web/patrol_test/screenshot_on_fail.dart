@@ -1,0 +1,83 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+
+import 'dart:convert';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:host_bridge/host_bridge.dart';
+import 'test_utils/screenshot_wrapper_widget.dart';
+
+/// Takes a screenshot from the current [WidgetTester] and saves it via host_bridge.
+/// Encodes PNG bytes as base64, writes to a temp .b64 file, then runs a command
+/// on the host to decode to the final .png (since host_bridge only supports string file writes).
+Future<void> takeScreenshot(WidgetTester tester, String testName) async {
+  try {
+    final screenshotWrapperWidget = tester.state<ScreenshotWrapperWidgetState>(
+        find.byType(ScreenshotWrapperWidget));
+    final screenshotController = screenshotWrapperWidget.screenshotController;
+    final sanitized = _sanitizeFileName(testName);
+
+    final image = await screenshotController.capture();
+    if (image == null) return;
+
+    final base64String = base64Encode(image);
+
+    final hostBridgeUrl = const String.fromEnvironment('HOST_BRIDGE_URL');
+    if (hostBridgeUrl.isEmpty) return;
+
+    final client = HostBridgeClient(hostBridgeUrl);
+    const screenshotsDir = 'patrol_test/failures';
+    final pngPath = '$screenshotsDir/$sanitized.png';
+
+    final mkdirResult = await client.runCommand(
+      RunCommandRequestModel(
+        command: 'mkdir -p $screenshotsDir',
+      ),
+    );
+    print('takeScreenshot mkdir result: $mkdirResult');
+    final result = await client.runCommand(
+      RunCommandRequestModel(
+        command: 'echo "$base64String" | base64 -d > $pngPath',
+      ),
+    );
+    print('takeScreenshot result: $result');
+  } catch (e, st) {
+    // Don't fail the test if screenshot fails (e.g. on web without dart:io)
+    // ignore: avoid_print
+    print('Screenshot on fail error: $e\n$st');
+  }
+}
+
+String _sanitizeFileName(String name) {
+  return name
+      .replaceAll(RegExp(r'[^\w\s-]'), '')
+      .replaceAll(RegExp(r'\s+'), '_')
+      .trim()
+      .toLowerCase();
+}
+
+/// Runs [body] and registers a tearDown that takes a screenshot if the test fails.
+/// Use inside [patrolTest]:
+///   patrolTest('my test', ($) async {
+///     await runWithScreenshotOnFail($, 'my test', ($) async {
+///       // test body
+///     });
+///   });
+Future<void> runWithScreenshotOnFail(
+  dynamic $, // PatrolIntegrationTester
+  String testDescription,
+  Future<void> Function(dynamic $) body,
+) async {
+  final tester = $.tester as WidgetTester;
+  var failed = false;
+  addTearDown(() async {
+    if (failed) {
+      await takeScreenshot(tester, testDescription);
+    }
+  });
+  try {
+    await body($);
+  } catch (e) {
+    failed = true;
+    rethrow;
+  }
+}
