@@ -34,8 +34,13 @@ build/
 
 # FVM Version Cache
 .fvm/
+
 packages/locmate_web/test_bundle.dart
 packages/locmate_web/playwright-report/index.html
 packages/locmate_web/test-results/.last-run.json
 packages/locmate_web/patrol_test/test_bundle.dart
 packages/locmate_web/patrol_test/failures/
+
+*.g.dart
+*.gr.dart
+*.mapper.dart
