@@ -7,4 +7,6 @@ dependencies:
   locmate:
     path: ../packages/locmate
 
- 
+pubghost:
+  ignore_dependencies:
+    - locmate

@@ -13,7 +13,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  fpdart: ^1.1.1
   data_table_2: ^2.5.18
   auto_route: ^10.0.0
   flutter_riverpod: ^2.6.1
@@ -28,7 +27,6 @@ dependencies:
   locmate:
     path: ../locmate
   web_socket_channel: ^3.0.2
-  http: any
   dio: ^5.8.0+1
   dio_clean_http_response: ^2.0.0
   petitparser: ^6.0.2
@@ -58,3 +56,8 @@ flutter:
 
 patrol:
   app_name: Locmate
+
+pubghost:
+  ignore_dependencies:
+    - flutter_lints
+    - cupertino_icons

@@ -25,11 +25,7 @@ command:
 scripts:
   gen:
     run: melos exec --depends-on="build_runner" dart run build_runner build --delete-conflicting-outputs
-
-  gen:clean:
-    run: melos exec --depends-on="build_runner" dart pub run build_runner clean
-
-  test:
+  tests:
     run: melos exec --fail-fast --depends-on="flutter_test" -- flutter test
 
   build:
@@ -46,3 +42,11 @@ scripts:
 
   patrolTest:
     run: sh packages/locmate_web/patrol_test/run.sh
+
+  prChecks:
+    run: |
+      melos exec pubghost -d
+      melos exec pubghost -c
+      melos run gen
+      melos run tests
+      melos run patrolTest
