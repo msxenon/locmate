@@ -113,7 +113,7 @@ class LocmateCliHelper {
     );
   }
 
-  Future<void> deleteInPathDirs(String inPath) async {
+  Future<void> deleteInPath(String inPath) async {
     await client.runCommand(
       RunCommandRequestModel(command: 'rm -rf $inPath'),
     );

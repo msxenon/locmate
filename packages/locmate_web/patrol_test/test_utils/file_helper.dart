@@ -23,4 +23,10 @@ class FileHelper {
       fail('Unexpected file response for "$path": $response');
     }
   }
+
+  Future<void> writePathContent(String path, String content) async {
+    await _client.fileOp(
+      FilePostOpModelWriteString(path: path, content: content),
+    );
+  }
 }
