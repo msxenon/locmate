@@ -43,10 +43,16 @@ scripts:
   patrolTest:
     run: sh packages/locmate_web/patrol_test/run.sh
 
-  prChecks:
+  healthChecks:
     run: |
+      melos run gen
       melos exec pubghost -d
       melos exec pubghost -c
-      melos run gen
       melos run tests
       melos run patrolTest
+
+  prePublishChecks:
+    run: |
+      melos run healthChecks
+      melos run build
+      dart run scripts/check_versions.dart
