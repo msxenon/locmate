@@ -44,3 +44,4 @@ packages/locmate_web/patrol_test/failures/
 *.g.dart
 *.gr.dart
 *.mapper.dart
+packages/locmate/web_output/**
