@@ -14,7 +14,7 @@ part of 'app_router.dart';
 /// [HomeScreen]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
-    : super(HomeRoute.name, initialChildren: children);
+      : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
@@ -30,7 +30,7 @@ class HomeRoute extends PageRouteInfo<void> {
 /// [LandingScreen]
 class LandingRoute extends PageRouteInfo<void> {
   const LandingRoute({List<PageRouteInfo>? children})
-    : super(LandingRoute.name, initialChildren: children);
+      : super(LandingRoute.name, initialChildren: children);
 
   static const String name = 'LandingRoute';
 
@@ -46,7 +46,7 @@ class LandingRoute extends PageRouteInfo<void> {
 /// [LoadingScreen]
 class LoadingRoute extends PageRouteInfo<void> {
   const LoadingRoute({List<PageRouteInfo>? children})
-    : super(LoadingRoute.name, initialChildren: children);
+      : super(LoadingRoute.name, initialChildren: children);
 
   static const String name = 'LoadingRoute';
 
@@ -62,7 +62,7 @@ class LoadingRoute extends PageRouteInfo<void> {
 /// [LoggerScreen]
 class LoggerRoute extends PageRouteInfo<void> {
   const LoggerRoute({List<PageRouteInfo>? children})
-    : super(LoggerRoute.name, initialChildren: children);
+      : super(LoggerRoute.name, initialChildren: children);
 
   static const String name = 'LoggerRoute';
 
@@ -78,11 +78,11 @@ class LoggerRoute extends PageRouteInfo<void> {
 /// [NotFoundScreen]
 class NotFoundRoute extends PageRouteInfo<NotFoundRouteArgs> {
   NotFoundRoute({required String text, Key? key, List<PageRouteInfo>? children})
-    : super(
-        NotFoundRoute.name,
-        args: NotFoundRouteArgs(text: text, key: key),
-        initialChildren: children,
-      );
+      : super(
+          NotFoundRoute.name,
+          args: NotFoundRouteArgs(text: text, key: key),
+          initialChildren: children,
+        );
 
   static const String name = 'NotFoundRoute';
 
@@ -106,4 +106,14 @@ class NotFoundRouteArgs {
   String toString() {
     return 'NotFoundRouteArgs{text: $text, key: $key}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! NotFoundRouteArgs) return false;
+    return text == other.text && key == other.key;
+  }
+
+  @override
+  int get hashCode => text.hashCode ^ key.hashCode;
 }
