@@ -12,10 +12,18 @@ import 'screenshot_wrapper_widget.dart';
 /// Takes a screenshot from the current [WidgetTester] and saves it via host_bridge.
 /// Encodes PNG bytes as base64, writes to a temp .b64 file, then runs a command
 /// on the host to decode to the final .png (since host_bridge only supports string file writes).
+final _verbose = false;
+void verbosePrint(String message) {
+  if (_verbose) {
+    print('[Screenshot on fail] $message');
+  }
+}
+
 Future<void> takeScreenshot(
   PatrolIntegrationTester tester,
   String testName,
 ) async {
+  verbosePrint('takeScreenshot: $testName');
   try {
     final screenshotWrapperWidget = tester.tester
         .state<ScreenshotWrapperWidgetState>(
@@ -24,15 +32,21 @@ Future<void> takeScreenshot(
     final sanitized = _sanitizeFileName(testName);
 
     final image = await screenshotController.capture();
-    if (image == null) return;
+    if (image == null) {
+      verbosePrint('takeScreenshot: image is null');
+      return;
+    }
 
     final base64String = base64Encode(image);
 
     final hostBridgeUrl = const String.fromEnvironment('HOST_BRIDGE_URL');
-    if (hostBridgeUrl.isEmpty) return;
+    if (hostBridgeUrl.isEmpty) {
+      verbosePrint('takeScreenshot: hostBridgeUrl is empty');
+      return;
+    }
 
     final client = HostBridgeClient(hostBridgeUrl);
-    const screenshotsDir = 'patrol_test/failures';
+    const screenshotsDir = 'packages/locmate_web/patrol_test/failures';
     final pngPath = '$screenshotsDir/$sanitized.png';
 
     final mkdirResult = await client.runCommand(
@@ -40,17 +54,17 @@ Future<void> takeScreenshot(
         command: 'mkdir -p $screenshotsDir',
       ),
     );
-    print('takeScreenshot mkdir result: $mkdirResult');
+    verbosePrint('takeScreenshot mkdir result: $mkdirResult');
     final result = await client.runCommand(
       RunCommandRequestModel(
         command: 'echo "$base64String" | base64 -d > $pngPath',
       ),
     );
-    print('takeScreenshot result: $result');
+    verbosePrint('takeScreenshot result: $result');
   } catch (e, st) {
     // Don't fail the test if screenshot fails (e.g. on web without dart:io)
     // ignore: avoid_print
-    print('Screenshot on fail error: $e\n$st');
+    verbosePrint('Screenshot on fail error: $e\n$st');
   }
 }
 
@@ -66,17 +80,14 @@ String _sanitizeFileName(String name) {
 void patrolTestWithScreenshotOnFail(
   String testDescription,
   PatrolTesterCallback body,
-) async {
-  PatrolIntegrationTester? tester;
-  try {
-    patrolTest(testDescription, ($) {
-      tester = $;
-      return body($);
-    });
-  } catch (_) {
-    if (tester != null) {
-      await takeScreenshot(tester!, testDescription);
+) {
+  patrolTest(testDescription, ($) async {
+    try {
+      return await body($);
+    } catch (_) {
+      // Take screenshot inside callback so we run before test framework swallows the error
+      await takeScreenshot($, testDescription);
+      rethrow;
     }
-    rethrow;
-  }
+  });
 }
