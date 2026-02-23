@@ -55,4 +55,4 @@ scripts:
     run: |
       melos run healthChecks
       melos run build
-      dart run scripts/check_versions.dart
+      dart run scripts/check_web_versions.dart

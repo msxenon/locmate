@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+# Disable job control so killing the background host_bridge doesn't print "Terminated: 15"
+set +m
+
 # 1. Install host_bridge globally if not present
 if ! dart pub global list 2>/dev/null | grep -q 'host_bridge'; then
   echo "Installing host_bridge..."
