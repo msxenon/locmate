@@ -37,13 +37,14 @@ class ProjectDatasourceServerImpl extends ProjectDataSource {
 
   @override
   Future<String> getProjectPath() async {
+    final fullurl = EnvConfig.instance.getFullUrl(UrlPaths.projectPath);
     final response = await dio
-        .get(EnvConfig.instance.getFullUrl(UrlPaths.projectPath))
+        .get(fullurl)
         .fromJson(StringOpResponseMapper.fromMap);
 
     return response.fold(
       (l) {
-        throw '${l.message()}: ${dio.options.baseUrl}';
+        return '${l.message()}: $fullurl';
       },
       (r) {
         return r.response;

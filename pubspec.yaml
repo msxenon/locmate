@@ -57,6 +57,7 @@ melos:
 
     prePublishChecks:
       run: |
+        set -e
         melos run healthChecks
         melos run build
         dart run scripts/check_web_versions.dart
