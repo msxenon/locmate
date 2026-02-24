@@ -27,7 +27,8 @@ Future<void> takeScreenshot(
   try {
     final screenshotWrapperWidget = tester.tester
         .state<ScreenshotWrapperWidgetState>(
-            find.byType(ScreenshotWrapperWidget));
+          find.byType(ScreenshotWrapperWidget),
+        );
     final screenshotController = screenshotWrapperWidget.screenshotController;
     final sanitized = _sanitizeFileName(testName);
 
@@ -50,9 +51,7 @@ Future<void> takeScreenshot(
     final pngPath = '$screenshotsDir/$sanitized.png';
 
     final mkdirResult = await client.runCommand(
-      RunCommandRequestModel(
-        command: 'mkdir -p $screenshotsDir',
-      ),
+      RunCommandRequestModel(command: 'mkdir -p $screenshotsDir'),
     );
     verbosePrint('takeScreenshot mkdir result: $mkdirResult');
     final result = await client.runCommand(

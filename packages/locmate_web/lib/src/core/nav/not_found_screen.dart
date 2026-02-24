@@ -11,9 +11,7 @@ class NotFoundScreen extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         minimum: const EdgeInsets.all(16),
-        child: Center(
-          child: Text(text),
-        ),
+        child: Center(child: Text(text)),
       ),
     );
   }

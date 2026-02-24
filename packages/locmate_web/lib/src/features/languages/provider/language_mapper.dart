@@ -8,7 +8,11 @@ class LanguagesMapper {
   List<LangRowModelBase> call(List<ArbItems> arbFilesContent) {
     final langRowModels = <LangRowModelBase>[];
     for (final arbFileItems in arbFilesContent) {
-      final localeValue = arbFileItems.items.firstWhereOrNull((element) => element.key == '@@locale') as KeyValueItem?;
+      final localeValue =
+          arbFileItems.items.firstWhereOrNull(
+                (element) => element.key == '@@locale',
+              )
+              as KeyValueItem?;
       if (localeValue == null || localeValue.value.isEmpty) {
         continue;
       }
@@ -18,7 +22,9 @@ class LanguagesMapper {
           continue;
         }
         if (item is KeyValueItem) {
-          final relatedLangRowModel = langRowModels.firstWhereOrNull((element) => element.key == item.key);
+          final relatedLangRowModel = langRowModels.firstWhereOrNull(
+            (element) => element.key == item.key,
+          );
           if (relatedLangRowModel != null) {
             final index = langRowModels.indexOf(relatedLangRowModel);
             langRowModels[index] = langRowModels[index].copyWith(
@@ -34,14 +40,18 @@ class LanguagesMapper {
             );
           }
         } else if (item is KeyBodyItem) {
-          final relatedLangRowModel = langRowModels.firstWhereOrNull((element) => element.key == item.originalKey);
+          final relatedLangRowModel = langRowModels.firstWhereOrNull(
+            (element) => element.key == item.originalKey,
+          );
 
           if (relatedLangRowModel != null) {
             final index = langRowModels.indexOf(relatedLangRowModel);
             langRowModels[index] = langRowModels[index].copyWith(
               body: KeyBody(
                 description: item.description,
-                placeholders: item.placeholders?.map((e) => KeyPlaceholder(key: e.key, type: e.type)).toList(),
+                placeholders: item.placeholders
+                    ?.map((e) => KeyPlaceholder(key: e.key, type: e.type))
+                    .toList(),
               ),
             );
           } else {

@@ -14,8 +14,9 @@ class ProjectRepositoryImpl extends ProjectRepository {
   @override
   Future<L10nYamlModel?> getL10nModel() async {
     try {
-      final opResponse = await _projectDatasourceProvider
-          .fileOp(FileOpContextRead(path: L10nYamlModel.defaultFileName));
+      final opResponse = await _projectDatasourceProvider.fileOp(
+        FileOpContextRead(path: L10nYamlModel.defaultFileName),
+      );
 
       if (opResponse is StringOpResponse) {
         return L10nYamlModel.fromYamlContent(opResponse.response);
@@ -35,7 +36,8 @@ class ProjectRepositoryImpl extends ProjectRepository {
   Future<LocmateSettingsModel?> getLocmateModel() async {
     try {
       final opResponse = await _projectDatasourceProvider.fileOp(
-          FileOpContextRead(path: LocmateSettingsModel.defaultFileName));
+        FileOpContextRead(path: LocmateSettingsModel.defaultFileName),
+      );
       if (opResponse is StringOpResponse) {
         return LocmateSettingsModelMapper.fromJson(opResponse.response);
       }
@@ -75,28 +77,26 @@ class ProjectRepositoryImpl extends ProjectRepository {
     return _projectDatasourceProvider
         .dirOp(DirOpContextRead(path: fullArbDirPath))
         .then((value) {
-      if (value is ListOpResponse) {
-        return value.response;
-      }
-      return <String>[];
-    });
+          if (value is ListOpResponse) {
+            return value.response;
+          }
+          return <String>[];
+        });
   }
 
   @override
   Future<void> saveArbFileContent(String path, Map<String, dynamic> content) {
-    return ref.read(projectDatasourceProvider).fileOp(
-          FileOpContextWriteMap(
-            path: path,
-            content: content,
-          ),
-        );
+    return ref
+        .read(projectDatasourceProvider)
+        .fileOp(FileOpContextWriteMap(path: path, content: content));
   }
 
   @override
   Future<String?> getProjectPubspec() async {
     try {
-      final opResponse = await _projectDatasourceProvider
-          .fileOp(FileOpContextRead(path: 'pubspec.yaml'));
+      final opResponse = await _projectDatasourceProvider.fileOp(
+        FileOpContextRead(path: 'pubspec.yaml'),
+      );
       if (opResponse is StringOpResponse) {
         return opResponse.response;
       }

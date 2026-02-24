@@ -5,23 +5,20 @@ import 'package:locmate_web/src/features/editor/ui/project_settings_page_sheet.d
 import 'package:locmate_web/src/features/editor/logic/locmate_settings_model.dart';
 
 class Navigation {
-  Future<void> projectSettings(BuildContext context, LocmateSettingsModel? locmateModel) async {
+  Future<void> projectSettings(
+    BuildContext context,
+    LocmateSettingsModel? locmateModel,
+  ) async {
     await WoltModalSheetHelper.show<String>(
       context,
-      (context) => [
-        ProjectSettingsPageSheet().build(context),
-      ],
+      (context) => [ProjectSettingsPageSheet().build(context)],
     );
   }
 
-  Future<String?> addNewLang(
-    BuildContext context,
-  ) async {
+  Future<String?> addNewLang(BuildContext context) async {
     return await WoltModalSheetHelper.show<String>(
       context,
-      (context) => [
-        AddNewLangPageSheet().build(context),
-      ],
+      (context) => [AddNewLangPageSheet().build(context)],
     );
   }
 }

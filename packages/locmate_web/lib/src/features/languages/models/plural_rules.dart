@@ -76,7 +76,7 @@ class PluralRuleMapper {
   int _v = 0;
 
   /// Number of visible fraction digits without trailing zeros.
-// Unused, for now int _w = 0;
+  // Unused, for now int _w = 0;
 
   /// The visible fraction digits in n, with trailing zeros.
   int _f = 0;
@@ -84,14 +84,14 @@ class PluralRuleMapper {
   /// The visible fraction digits in n, without trailing zeros.
   int _t = 0;
 
-// An example, for precision n = 3.1415 and precision = 7)
-//   n  : 3.1415
-// str n: 3.1415000 (the "formatted" n, 7 fractional digits)
-//   i  : 3         (the integer part of n)
-//   f  :   1415000 (the fractional part of n)
-//   v  : 7         (how many digits in f)
-//   t  :   1415    (f, without trailing 0s)
-//   w  : 4         (how many digits in t)
+  // An example, for precision n = 3.1415 and precision = 7)
+  //   n  : 3.1415
+  // str n: 3.1415000 (the "formatted" n, 7 fractional digits)
+  //   i  : 3         (the integer part of n)
+  //   f  :   1415000 (the fractional part of n)
+  //   v  : 7         (how many digits in f)
+  //   t  :   1415    (f, without trailing 0s)
+  //   w  : 4         (how many digits in t)
 
   PluralCase _ast_rule() {
     if ((_i == 1) && (_v == 0)) {
@@ -137,22 +137,32 @@ class PluralRuleMapper {
     if ((_n % 10 == 1) && !(_n % 100 == 11)) {
       return PluralCase.one;
     }
-    if ((_n % 10 == 2 || _n % 10 == 3 || _n % 10 == 4) && !(_n % 100 == 12 || _n % 100 == 13 || _n % 100 == 14)) {
+    if ((_n % 10 == 2 || _n % 10 == 3 || _n % 10 == 4) &&
+        !(_n % 100 == 12 || _n % 100 == 13 || _n % 100 == 14)) {
       return PluralCase.few;
     }
     if ((_n % 10 == 0) ||
-        (_n % 10 == 5 || _n % 10 == 6 || _n % 10 == 7 || _n % 10 == 8 || _n % 10 == 9) ||
-        (_n % 100 == 11 || _n % 100 == 12 || _n % 100 == 13 || _n % 100 == 14)) {
+        (_n % 10 == 5 ||
+            _n % 10 == 6 ||
+            _n % 10 == 7 ||
+            _n % 10 == 8 ||
+            _n % 10 == 9) ||
+        (_n % 100 == 11 ||
+            _n % 100 == 12 ||
+            _n % 100 == 13 ||
+            _n % 100 == 14)) {
       return PluralCase.many;
     }
     return PluralCase.other;
   }
 
   PluralCase _br_rule() {
-    if ((_n % 10 == 1) && !(_n % 100 == 11 || _n % 100 == 71 || _n % 100 == 91)) {
+    if ((_n % 10 == 1) &&
+        !(_n % 100 == 11 || _n % 100 == 71 || _n % 100 == 91)) {
       return PluralCase.one;
     }
-    if ((_n % 10 == 2) && !(_n % 100 == 12 || _n % 100 == 72 || _n % 100 == 92)) {
+    if ((_n % 10 == 2) &&
+        !(_n % 100 == 12 || _n % 100 == 72 || _n % 100 == 92)) {
       return PluralCase.two;
     }
     if ((_n % 10 == 3 || _n % 10 == 4 || _n % 10 == 9) &&
@@ -168,13 +178,15 @@ class PluralRuleMapper {
   }
 
   PluralCase _bs_rule() {
-    if ((_v == 0) && (_i % 10 == 1) && !(_i % 100 == 11) || (_f % 10 == 1) && !(_f % 100 == 11)) {
+    if ((_v == 0) && (_i % 10 == 1) && !(_i % 100 == 11) ||
+        (_f % 10 == 1) && !(_f % 100 == 11)) {
       return PluralCase.one;
     }
     if ((_v == 0) &&
             (_i % 10 == 2 || _i % 10 == 3 || _i % 10 == 4) &&
             !(_i % 100 == 12 || _i % 100 == 13 || _i % 100 == 14) ||
-        (_f % 10 == 2 || _f % 10 == 3 || _f % 10 == 4) && !(_f % 100 == 12 || _f % 100 == 13 || _f % 100 == 14)) {
+        (_f % 10 == 2 || _f % 10 == 3 || _f % 10 == 4) &&
+            !(_f % 100 == 12 || _f % 100 == 13 || _f % 100 == 14)) {
       return PluralCase.few;
     }
     return PluralCase.other;
@@ -292,7 +304,8 @@ class PluralRuleMapper {
   }
 
   PluralCase _is_rule() {
-    if ((_t == 0) && (_i % 10 == 1) && !(_i % 100 == 11) || (_t % 10 == 1) && !(_t % 100 == 11)) {
+    if ((_t == 0) && (_i % 10 == 1) && !(_i % 100 == 11) ||
+        (_t % 10 == 1) && !(_t % 100 == 11)) {
       return PluralCase.one;
     }
     return PluralCase.other;
@@ -306,10 +319,12 @@ class PluralRuleMapper {
   }
 
   PluralCase _lt_rule() {
-    if ((_n % 10 == 1) && ![11, 12, 13, 14, 15, 16, 17, 18, 19].contains(_n % 100)) {
+    if ((_n % 10 == 1) &&
+        ![11, 12, 13, 14, 15, 16, 17, 18, 19].contains(_n % 100)) {
       return PluralCase.one;
     }
-    if (([2, 3, 4, 5, 6, 7, 8, 9].contains(_n % 10)) && ![11, 12, 13, 14, 15, 16, 17, 18, 19].contains(_n % 100)) {
+    if (([2, 3, 4, 5, 6, 7, 8, 9].contains(_n % 10)) &&
+        ![11, 12, 13, 14, 15, 16, 17, 18, 19].contains(_n % 100)) {
       return PluralCase.few;
     }
     if (!(_f == 0)) {
@@ -321,7 +336,8 @@ class PluralRuleMapper {
   PluralCase _lv_rule() {
     if ((_n % 10 == 0) ||
         ([11, 12, 13, 14, 15, 16, 17, 18, 19].contains(_n % 100)) ||
-        (_v == 2) && ([11, 12, 13, 14, 15, 16, 17, 18, 19].contains(_f % 100))) {
+        (_v == 2) &&
+            ([11, 12, 13, 14, 15, 16, 17, 18, 19].contains(_f % 100))) {
       return PluralCase.zero;
     }
     if ((_n % 10 == 1) && !(_n % 100 == 11) ||
@@ -333,7 +349,8 @@ class PluralRuleMapper {
   }
 
   PluralCase _mk_rule() {
-    if ((_v == 0) && (_i % 10 == 1) && !(_i % 100 == 11) || (_f % 10 == 1) && !(_f % 100 == 11)) {
+    if ((_v == 0) && (_i % 10 == 1) && !(_i % 100 == 11) ||
+        (_f % 10 == 1) && !(_f % 100 == 11)) {
       return PluralCase.one;
     }
     return PluralCase.other;
@@ -365,7 +382,12 @@ class PluralRuleMapper {
       return PluralCase.few;
     }
     if ((_v == 0) && !(_i == 1) && (_i % 10 == 0 || _i % 10 == 1) ||
-        (_v == 0) && (_i % 10 == 5 || _i % 10 == 6 || _i % 10 == 7 || _i % 10 == 8 || _i % 10 == 9) ||
+        (_v == 0) &&
+            (_i % 10 == 5 ||
+                _i % 10 == 6 ||
+                _i % 10 == 7 ||
+                _i % 10 == 8 ||
+                _i % 10 == 9) ||
         (_v == 0) && (_i % 100 == 12 || _i % 100 == 13 || _i % 100 == 14)) {
       return PluralCase.many;
     }
@@ -386,7 +408,9 @@ class PluralRuleMapper {
     if ((_i == 1) && (_v == 0)) {
       return PluralCase.one;
     }
-    if (!(_v == 0) || (_n == 0) || !(_n == 1) && (List.generate(19, (i) => i + 1).contains(_n % 100))) {
+    if (!(_v == 0) ||
+        (_n == 0) ||
+        !(_n == 1) && (List.generate(19, (i) => i + 1).contains(_n % 100))) {
       return PluralCase.few;
     }
     return PluralCase.other;
@@ -402,8 +426,17 @@ class PluralRuleMapper {
       return PluralCase.few;
     }
     if ((_v == 0) && (_i % 10 == 0) ||
-        (_v == 0) && (_i % 10 == 5 || _i % 10 == 6 || _i % 10 == 7 || _i % 10 == 8 || _i % 10 == 9) ||
-        (_v == 0) && (_i % 100 == 11 || _i % 100 == 12 || _i % 100 == 13 || _i % 100 == 14)) {
+        (_v == 0) &&
+            (_i % 10 == 5 ||
+                _i % 10 == 6 ||
+                _i % 10 == 7 ||
+                _i % 10 == 8 ||
+                _i % 10 == 9) ||
+        (_v == 0) &&
+            (_i % 100 == 11 ||
+                _i % 100 == 12 ||
+                _i % 100 == 13 ||
+                _i % 100 == 14)) {
       return PluralCase.many;
     }
     return PluralCase.other;
@@ -556,7 +589,11 @@ class PluralRuleMapper {
 
   PluralCase call(num num, String locale) {
     startRuleEvaluation(num);
-    var verifiedLocale = Intl.verifiedLocale(locale, localeHasPluralRules, onFailure: (locale) => 'default');
+    var verifiedLocale = Intl.verifiedLocale(
+      locale,
+      localeHasPluralRules,
+      onFailure: (locale) => 'default',
+    );
     return pluralRules[verifiedLocale]!.call();
   }
 }

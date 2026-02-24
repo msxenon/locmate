@@ -16,20 +16,16 @@ void main() {
     ($) async {
       final appSandboxPath = 'packages/locmate_web/patrol_test/sandbox';
       final locmateCliHelper = LocmateCliHelper();
-      final locmateServer =
-          await locmateCliHelper.runLocmateCli(appSandboxPath);
+      final locmateServer = await locmateCliHelper.runLocmateCli(
+        appSandboxPath,
+      );
       addTearDown(() async {
         await locmateCliHelper.deleteInPath(appSandboxPath);
         locmateServer.kill();
       });
-      EnvConfig.setTestInstance(
-        EnvConfigEnum.server,
-        locmateServer.url,
-      );
+      EnvConfig.setTestInstance(EnvConfigEnum.server, locmateServer.url);
       await $.pumpWidgetAndSettle(
-        ScreenshotWrapperWidget(
-          child: AppContainer(),
-        ),
+        ScreenshotWrapperWidget(child: AppContainer()),
       );
 
       final createProjectFinder = find.textContaining(
@@ -45,7 +41,7 @@ void main() {
         JsonStringMapper.mapToString({
           "keyFormat": "camelCase",
           "localesOrder": ["en"],
-          "projectName": "New project"
+          "projectName": "New project",
         }),
       );
 

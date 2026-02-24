@@ -15,12 +15,12 @@ class AppRouter extends RootStackRouter {
   AppRouter({required this.ref});
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: HomeRoute.page, path: '/', initial: true),
-        // AutoRoute(page: NotFoundRoute.page, path: '*'), // Catch-all route
-        AutoRoute(page: NotFoundRoute.page, path: '/not_found'),
-        AutoRoute(page: LoadingRoute.page, path: '/loading'),
-        AutoRoute(page: LoggerRoute.page, path: '/logs'),
-      ];
+    AutoRoute(page: HomeRoute.page, path: '/', initial: true),
+    // AutoRoute(page: NotFoundRoute.page, path: '*'), // Catch-all route
+    AutoRoute(page: NotFoundRoute.page, path: '/not_found'),
+    AutoRoute(page: LoadingRoute.page, path: '/loading'),
+    AutoRoute(page: LoggerRoute.page, path: '/logs'),
+  ];
 
   @override
   List<AutoRouteGuard> get guards => [EssentialProjectFilesGuard(ref: ref)];

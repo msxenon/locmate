@@ -14,7 +14,8 @@ ProjectDataSource projectDatasource(Ref ref) {
       return ProjectDatasourceServerImpl();
     case EnvConfigEnum.sharedPrefs:
       return ProjectDatasourceSharedPrefsImpl(
-          ref.read(sharedPrefrencesWrapperProvider));
+        ref.read(sharedPrefrencesWrapperProvider),
+      );
   }
 }
 

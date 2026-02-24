@@ -5,8 +5,10 @@ import 'package:host_bridge/host_bridge.dart';
 /// Helper to run the locmate CLI server via host_bridge and capture its listening URL.
 /// Works in browser/patrol tests where dart:io Process is unavailable.
 class LocmateCliHelper {
-  final _hostBridgeUrl =
-      const String.fromEnvironment('HOST_BRIDGE_URL', defaultValue: '');
+  final _hostBridgeUrl = const String.fromEnvironment(
+    'HOST_BRIDGE_URL',
+    defaultValue: '',
+  );
   late final client = HostBridgeClient(_hostBridgeUrl);
 
   /// Matches http://host:port only (no trailing punctuation like period).
@@ -16,8 +18,10 @@ class LocmateCliHelper {
   /// stream until "Listening on" URL is seen, then closes the stream and returns
   /// [LocmateServer]. The process keeps running; use [LocmateServer.kill] to stop it.
   Future<LocmateServer> runLocmateCli(String inPath) async {
-    final locmateDir =
-        const String.fromEnvironment('LOCMATE_PACKAGE_PATH', defaultValue: '');
+    final locmateDir = const String.fromEnvironment(
+      'LOCMATE_PACKAGE_PATH',
+      defaultValue: '',
+    );
     if (_hostBridgeUrl.isEmpty || locmateDir.isEmpty) {
       throw StateError(
         'HOST_BRIDGE_URL and LOCMATE_PACKAGE_PATH must be set (via --dart-define)',
@@ -67,11 +71,13 @@ class LocmateCliHelper {
               sub.cancel();
               final url = match.group(0)!;
               print('LocmateCliHelper: url: $url');
-              completer.complete(LocmateServer(
-                client: client,
-                pid: pid ?? 0,
-                url: match.group(0)!,
-              ));
+              completer.complete(
+                LocmateServer(
+                  client: client,
+                  pid: pid ?? 0,
+                  url: match.group(0)!,
+                ),
+              );
             }
           }
         } else if (event is RunAdvancedCommandResponseModelError &&
@@ -79,7 +85,8 @@ class LocmateCliHelper {
           sub.cancel();
           completer.completeError(
             StateError(
-                'Locmate failed (exit ${event.exitCode}): ${event.stderr}'),
+              'Locmate failed (exit ${event.exitCode}): ${event.stderr}',
+            ),
           );
         }
       },
@@ -114,19 +121,13 @@ class LocmateCliHelper {
   }
 
   Future<void> deleteInPath(String inPath) async {
-    await client.runCommand(
-      RunCommandRequestModel(command: 'rm -rf $inPath'),
-    );
+    await client.runCommand(RunCommandRequestModel(command: 'rm -rf $inPath'));
   }
 }
 
 /// A running locmate server. Call [kill] to stop it.
 class LocmateServer {
-  LocmateServer({
-    required this.client,
-    required this.pid,
-    required this.url,
-  });
+  LocmateServer({required this.client, required this.pid, required this.url});
 
   final HostBridgeClient client;
   final int pid;

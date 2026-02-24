@@ -21,10 +21,7 @@ class _AppContainerState extends State<AppContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return UncontrolledProviderScope(
-      container: container,
-      child: MyApp(),
-    );
+    return UncontrolledProviderScope(container: container, child: MyApp());
   }
 
   @override

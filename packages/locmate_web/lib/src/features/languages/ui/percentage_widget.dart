@@ -20,10 +20,7 @@ class PercentageWidget extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(2.0),
-        child: Text(
-          '$percentage%',
-          style: TextStyle(color: color),
-        ),
+        child: Text('$percentage%', style: TextStyle(color: color)),
       ),
     );
   }

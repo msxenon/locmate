@@ -34,8 +34,9 @@ class WoltAppBar extends StatelessWidget {
                   Text(
                     sectionTitle!,
                     style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.appBarTheme.iconTheme?.color!
-                          .withValues(alpha: 0.7),
+                      color: theme.appBarTheme.iconTheme?.color!.withValues(
+                        alpha: 0.7,
+                      ),
                     ),
                   ),
               ],

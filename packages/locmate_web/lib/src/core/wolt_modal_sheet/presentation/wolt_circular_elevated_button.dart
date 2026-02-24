@@ -13,7 +13,9 @@ class WoltCircularElevatedButton extends StatelessWidget {
   final Color? fillColor;
   @override
   Widget build(BuildContext context) {
-    final color = fillColor ?? Theme.of(context).colorScheme.primary.withValues(alpha: 0.4);
+    final color =
+        fillColor ??
+        Theme.of(context).colorScheme.primary.withValues(alpha: 0.4);
 
     return RawMaterialButton(
       elevation: 0,

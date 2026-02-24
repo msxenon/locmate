@@ -7,10 +7,6 @@ class LoadingScreen extends ConsumerWidget {
   const LoadingScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: Center(
-        child: CircularProgressIndicator.adaptive(),
-      ),
-    );
+    return Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
   }
 }

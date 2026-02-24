@@ -28,9 +28,9 @@ class LangState with LangStateMappable {
     this.isSortAscending = false,
     this.overallCompletionPercentage = 0,
     this.focusedKey,
-  })  : problems = rows.where((e) => e.warnings != null).toList(),
-        uncompleted = rows.where((e) => e.completionPercentage < 100).toList(),
-        selected = rows.where((e) => e.isSelected).toList();
+  }) : problems = rows.where((e) => e.warnings != null).toList(),
+       uncompleted = rows.where((e) => e.completionPercentage < 100).toList(),
+       selected = rows.where((e) => e.isSelected).toList();
 }
 
 extension LangStateExt on LangState {

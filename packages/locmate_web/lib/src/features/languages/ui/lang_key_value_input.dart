@@ -129,11 +129,12 @@ class _PluralsState extends State<Plurals> {
               child: DefaultTextInputField(
                 value: value ?? '',
                 onSave: (value) {
-                  final pluralContainer =
-                      widget.pluralContainer.copyWith(values: {
-                    ...widget.pluralContainer.values,
-                    pluralCase: value,
-                  });
+                  final pluralContainer = widget.pluralContainer.copyWith(
+                    values: {
+                      ...widget.pluralContainer.values,
+                      pluralCase: value,
+                    },
+                  );
                   widget.onSave(pluralContainer.mapToString()!);
                 },
               ),
@@ -154,8 +155,11 @@ class _PluralsState extends State<Plurals> {
 }
 
 class DefaultTextInputField extends StatefulWidget {
-  const DefaultTextInputField(
-      {required this.value, required this.onSave, super.key});
+  const DefaultTextInputField({
+    required this.value,
+    required this.onSave,
+    super.key,
+  });
   final String value;
   final ValueChanged<String> onSave;
   @override
@@ -231,7 +235,7 @@ class _DefaultTextInputFieldState extends State<DefaultTextInputField> {
                     Icons.check_circle,
                     color: hasUnsavedChanges ? Colors.orange : Colors.green,
                   ),
-                )
+                ),
             ],
           ),
         ),

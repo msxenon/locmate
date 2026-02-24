@@ -8,9 +8,7 @@ part 'project_response.mapper.dart';
 @MappableClass(ignoreNull: true, discriminatorKey: 'type')
 sealed class ProjectResponse with ProjectResponseMappable {
   final String projectPath;
-  const ProjectResponse({
-    required this.projectPath,
-   });
+  const ProjectResponse({required this.projectPath});
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: 'data')
@@ -31,7 +29,5 @@ class ProjectData extends ProjectResponse with ProjectDataMappable {
 
 @MappableClass(ignoreNull: true, discriminatorValue: 'empty')
 class ProjectEmpty extends ProjectResponse with ProjectEmptyMappable {
-  const ProjectEmpty({
-    required super.projectPath,
-  });
+  const ProjectEmpty({required super.projectPath});
 }

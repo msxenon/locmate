@@ -13,10 +13,7 @@ import 'package:locmate_web/src/features/languages/ui/no_languages_found.dart';
 import 'package:locmate_web/src/features/languages/ui/single_key_focus_view.dart';
 import 'package:locmate_web/src/core/wolt_modal_sheet/wolt_modal_sheet_helper.dart';
 
-enum LangViewMode {
-  dataTable,
-  singleKeyFocus,
-}
+enum LangViewMode { dataTable, singleKeyFocus }
 
 class LangsDataWidget extends ConsumerStatefulWidget {
   const LangsDataWidget(this.projectData, {super.key});
@@ -58,13 +55,13 @@ class _LangsDataWidgetState extends ConsumerState<LangsDataWidget> {
             Expanded(
               child: switch (_langViewMode) {
                 LangViewMode.dataTable => DataTableViewType(
-                    langState: data,
-                    controller: controller,
-                  ),
+                  langState: data,
+                  controller: controller,
+                ),
                 LangViewMode.singleKeyFocus => SingleKeyFocus(
-                    langState: data,
-                    controller: controller,
-                  ),
+                  langState: data,
+                  controller: controller,
+                ),
               },
             ),
           ],
