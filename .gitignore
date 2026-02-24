@@ -45,3 +45,5 @@ packages/locmate_web/patrol_test/failures/
 *.gr.dart
 *.mapper.dart
 packages/locmate/web_output/**
+example/pubspec_overrides.yaml
+packages/locmate_web/pubspec_overrides.yaml

@@ -3,6 +3,8 @@ name: example
 environment:
   sdk: ^3.11.0
 
+resolution: workspace
+
 dependencies:
   locmate:
     path: ../packages/locmate
