@@ -5,7 +5,8 @@ abstract class Constants {
       {required String projectPath,
       required String arbDir,
       String arbFileName = ''}) {
-    final paths = [projectPath, arbDir, arbFileName]
+    final sanitizedArbFileName = arbFileName.split('/').last;
+    final paths = [projectPath, arbDir, sanitizedArbFileName]
       ..removeWhere((element) => element.isEmpty);
     return paths.join('/');
   }

@@ -123,6 +123,34 @@ void main() {
           );
     }
 
+    test('should not look for lib/l10n/lib/l10n/app_en.arb', () async {
+      final arbDir = 'lib/l10n';
+
+      when(() => mockProjectRepository.getL10nModel())
+          .thenAnswer((_) async => null);
+      when(() => mockProjectRepository.listArbFiles(arbDir))
+          .thenAnswer((_) async => ['lib/l10n/app_en.arb']);
+      when(() => mockProjectDataSource
+              .fileOp(FileOpContextRead(path: 'lib/l10n/app_en.arb')))
+          .thenAnswer(
+              (_) async => StringOpResponse(response: '{"@@locale": "en"}'));
+      await container.read(projectManagerProvider.future);
+
+      final result =
+          await container.read(projectManagerProvider.notifier).loadString(
+                projectPath: '',
+                arbDir: arbDir,
+                locmateModel: null,
+              );
+
+      expect(result, [
+        ArbFileEntity(
+          values: {'@@locale': 'en'},
+          fileName: 'lib/l10n/app_en.arb',
+        ),
+      ]);
+    });
+
     test('returns empty list when no ARB files exist', () async {
       when(() => mockProjectRepository.getL10nModel())
           .thenAnswer((_) async => null);
