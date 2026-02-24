@@ -45,6 +45,8 @@ scripts:
 
   healthChecks:
     run: |
+      melos exec dart format --set-exit-if-changed
+      melos exec dart analyze --fatal-infos --fatal-warnings
       melos run gen
       melos exec pubghost -d
       melos exec pubghost -c
