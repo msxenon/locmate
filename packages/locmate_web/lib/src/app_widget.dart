@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:locmate_web/src/core/locmate_theme.dart';
 import 'package:locmate_web/src/core/logger/ui/debug_wrapper.dart';
 import 'package:locmate_web/src/core/nav/app_router.dart';
+import 'package:locmate_web/src/core/theme/theme_mode_provider.dart';
 import 'package:locmate_web/src/features/editor/logic/project_manager.dart';
 
 class MyApp extends ConsumerStatefulWidget {
@@ -29,12 +30,15 @@ class _MyAppState extends ConsumerState<MyApp> {
         valueChangedListener.value = valueChangedListener.value + 1;
       },
     );
+    final themeModeAsync = ref.watch(themeModeNotifierProvider);
+    final themeMode = themeModeAsync.valueOrNull ?? ThemeMode.system;
+
     return MaterialApp.router(
       color: Colors.blue,
       title: 'Locmate',
       theme: LocmateTheme.lightTheme,
       darkTheme: LocmateTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
@@ -50,9 +54,7 @@ class _MyAppState extends ConsumerState<MyApp> {
           child: child ?? SizedBox(),
         );
       },
-      supportedLocales: [
-        Locale('en', ''),
-      ],
+      supportedLocales: [Locale('en', '')],
       routerConfig: _router.config(reevaluateListenable: valueChangedListener),
     );
   }

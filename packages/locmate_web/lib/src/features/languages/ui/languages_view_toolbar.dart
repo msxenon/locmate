@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:locmate_web/src/core/theme/theme_mode_switch.dart';
 
 import 'package:locmate_web/src/data/models/project_response.dart';
 import 'package:locmate_web/src/features/languages/models/lang_state.dart';
@@ -72,6 +73,7 @@ class _LanguagesViewToolbarState extends State<LanguagesViewToolbar> {
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
             Spacer(),
+            ThemeModeSwitch(),
             IconButton(
               onPressed: () {
                 final model = projectData.locmateSettingsModel;

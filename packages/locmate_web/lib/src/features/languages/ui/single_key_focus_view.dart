@@ -32,41 +32,36 @@ class SingleKeyFocus extends StatelessWidget {
       children: [
         Flexible(
           flex: 1,
-          child: Container(
-            // color: Theme.of(context).colorScheme.surfaceDim,
-            child: ListView.separated(
-              separatorBuilder: (context, index) => Divider(),
-              itemCount: rows.length,
-              itemBuilder: (context, index) {
-                final row = rows[index];
-                final isFocused = row == focusedRow;
-                return ListTile(
-                  leading: Checkbox(
-                    value: row.isSelected,
-                    onChanged: (value) {
-                      controller.toggleCheckmark(row.key);
-                    },
-                  ),
-                  title: Text(
-                    row.key,
-                    style: TextStyle(
-                      fontWeight: isFocused
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
-                  ),
-                  selected: isFocused,
-                  subtitle: Text(row.body.description ?? ''),
-                  selectedTileColor: Theme.of(
-                    context,
-                  ).colorScheme.primaryContainer.withValues(alpha: 0.2),
-                  trailing: PercentageWidget(row.completionPercentage),
-                  onTap: () {
-                    controller.setFocusedKeyName(row.key);
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(),
+            itemCount: rows.length,
+            itemBuilder: (context, index) {
+              final row = rows[index];
+              final isFocused = row == focusedRow;
+              return ListTile(
+                leading: Checkbox(
+                  value: row.isSelected,
+                  onChanged: (value) {
+                    controller.toggleCheckmark(row.key);
                   },
-                );
-              },
-            ),
+                ),
+                title: Text(
+                  row.key,
+                  style: TextStyle(
+                    fontWeight: isFocused ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+                selected: isFocused,
+                subtitle: Text(row.body.description ?? ''),
+                selectedTileColor: Theme.of(
+                  context,
+                ).colorScheme.primaryContainer.withValues(alpha: 0.2),
+                trailing: PercentageWidget(row.completionPercentage),
+                onTap: () {
+                  controller.setFocusedKeyName(row.key);
+                },
+              );
+            },
           ),
         ),
         Flexible(
