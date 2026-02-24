@@ -47,8 +47,8 @@ melos:
 
     healthChecks:
       run: |
-        melos exec dart format --set-exit-if-changed .
-        melos exec dart analyze --fatal-infos --fatal-warnings .
+        melos exec --fail-fast dart format --set-exit-if-changed .
+        melos exec --fail-fast dart analyze --fatal-infos --fatal-warnings .
         melos run gen
         melos exec pubghost -d
         melos exec pubghost -c
