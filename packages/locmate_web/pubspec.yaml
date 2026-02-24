@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  cupertino_icons: ^1.0.8
   data_table_2: ^2.5.18
   auto_route: ^10.0.0
   flutter_riverpod: ^2.6.1
