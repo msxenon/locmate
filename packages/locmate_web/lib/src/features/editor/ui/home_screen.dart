@@ -5,6 +5,7 @@ import 'package:locmate_web/src/data/models/project_response.dart';
 import 'package:locmate_web/src/features/editor/logic/project_manager.dart';
 import 'package:locmate_web/src/features/editor/ui/app_version_widget.dart';
 import 'package:locmate_web/src/features/editor/ui/create_project_widget.dart';
+import 'package:locmate_web/src/features/editor/ui/project_path_widget.dart';
 import 'package:locmate_web/src/features/languages/ui/languages_view.dart';
 
 @RoutePage()
@@ -14,21 +15,12 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AsyncProviderBuilder<ProjectResponse>(
       (context, state) => Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Center(
-                child: switch (state) {
-                  ProjectData x => LangsDataWidget(x),
-                  ProjectEmpty() => CreateProjectWidget(),
-                },
-              ),
-            ),
-            Text('Path: ${state.projectPath}'),
-          ],
-        ),
+        child: switch (state) {
+          ProjectData x => LangsDataWidget(x),
+          ProjectEmpty() => CreateProjectWidget(),
+        },
       ),
+
       provider: projectManagerProvider,
       wrapper: (context, value, child) {
         return Scaffold(
@@ -36,17 +28,27 @@ class HomeScreen extends ConsumerWidget {
             minimum: EdgeInsets.all(8),
             child: child ?? SizedBox(),
           ),
-          bottomNavigationBar: SafeArea(child: const AppVersionWidget()),
+          bottomNavigationBar: SafeArea(
+            minimum: EdgeInsets.all(8),
+            child: Row(
+              spacing: 2,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ProjectPathWidget(),
+                Spacer(),
+                const AppVersionWidget(),
+              ],
+            ),
+          ),
         );
       },
     );
   }
 }
 
-typedef ProviderWidgetBuilder<S> = Widget Function(
-  BuildContext context,
-  S state,
-);
+typedef ProviderWidgetBuilder<S> =
+    Widget Function(BuildContext context, S state);
 typedef BlocWidgetListener<S> = void Function(BuildContext context, S state);
 
 class AsyncProviderBuilder<Val extends Object> extends ConsumerWidget {
