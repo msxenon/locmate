@@ -41,7 +41,7 @@ class ProjectManager extends _$ProjectManager {
         ),
       );
     } catch (e) {
-      if (!kReleaseMode ) {
+      if (!kReleaseMode) {
         rethrow;
       }
       return ProjectEmpty(projectPath: x);
@@ -166,13 +166,21 @@ class ProjectManager extends _$ProjectManager {
   }
 
   Future<String?> getPubspecProjectName() async {
-    final pubspec =
-        await ref.read(projectRepositoryProvider).getProjectPubspec();
-    if (pubspec == null) {
+    try {
+      final pubspec =
+          await ref.read(projectRepositoryProvider).getProjectPubspec();
+      if (pubspec == null || pubspec.trim().isEmpty) {
+        return null;
+      }
+      final yaml = loadYaml(pubspec);
+      final map = Map<String, dynamic>.from(yaml);
+      return map['name'];
+    } catch (e) {
+      LoggerService.instance.web.e(
+        'Error while reading pubspec',
+        error: e,
+      );
       return null;
     }
-    final yaml = loadYaml(pubspec);
-    final map = Map<String, dynamic>.from(yaml);
-    return map['name'];
   }
 }
