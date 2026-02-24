@@ -35,6 +35,8 @@ dependencies:
   rxdart: ^0.28.0
   async: ^2.13.0
   web: ^1.1.1
+  locmate:
+    path: ../locmate
 
 dev_dependencies:
   flutter_test:
