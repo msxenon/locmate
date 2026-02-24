@@ -11,20 +11,21 @@ import 'package:locmate_web/src/features/languages/ui/percentage_widget.dart';
 class SingleKeyFocus extends StatelessWidget {
   final LangState langState;
   final LanguagesController controller;
-  const SingleKeyFocus(
-      {super.key, required this.langState, required this.controller});
+  const SingleKeyFocus({
+    super.key,
+    required this.langState,
+    required this.controller,
+  });
   @override
   Widget build(BuildContext context) {
     final langs = langState.orderdLangs;
     final rows = langState.getFilteredRows;
     final focusedRow =
         rows.firstWhereOrNull((e) => e.key == langState.focusedKey) ??
-            rows.firstOrNull;
+        rows.firstOrNull;
 
     if (rows.isEmpty) {
-      return Center(
-        child: Text('No keys found'),
-      );
+      return Center(child: Text('No keys found'));
     }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -32,7 +33,7 @@ class SingleKeyFocus extends StatelessWidget {
         Flexible(
           flex: 1,
           child: Container(
-            color: Theme.of(context).colorScheme.onPrimary,
+            // color: Theme.of(context).colorScheme.surfaceDim,
             child: ListView.separated(
               separatorBuilder: (context, index) => Divider(),
               itemCount: rows.length,
@@ -46,13 +47,19 @@ class SingleKeyFocus extends StatelessWidget {
                       controller.toggleCheckmark(row.key);
                     },
                   ),
-                  title: Text(row.key,
-                      style: TextStyle(
-                          fontWeight:
-                              isFocused ? FontWeight.bold : FontWeight.normal)),
+                  title: Text(
+                    row.key,
+                    style: TextStyle(
+                      fontWeight: isFocused
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                  ),
                   selected: isFocused,
                   subtitle: Text(row.body.description ?? ''),
-                  selectedTileColor: Colors.black.withValues(alpha: 0.1),
+                  selectedTileColor: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer.withValues(alpha: 0.2),
                   trailing: PercentageWidget(row.completionPercentage),
                   onTap: () {
                     controller.setFocusedKeyName(row.key);
@@ -87,11 +94,13 @@ class SingleKeyFocus extends StatelessWidget {
                         ),
                         onTap: () {
                           Clipboard.setData(
-                              ClipboardData(text: focusedRow.key));
+                            ClipboardData(text: focusedRow.key),
+                          );
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  '"${focusedRow.key}" copied to clipboard'),
+                                '"${focusedRow.key}" copied to clipboard',
+                              ),
                             ),
                           );
                         },

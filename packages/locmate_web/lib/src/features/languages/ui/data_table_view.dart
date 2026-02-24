@@ -20,10 +20,11 @@ class _SortIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Icon(
       ascending ? Icons.arrow_drop_up_rounded : Icons.arrow_drop_down_rounded,
       size: 28,
-      color: active ? Colors.cyan : null,
+      color: active ? theme.colorScheme.primary : null,
     );
   }
 }
@@ -52,8 +53,11 @@ class _HoverBuilderState extends State<HoverBuilder> {
 class DataTableViewType extends ConsumerWidget {
   final LangState langState;
   final LanguagesController controller;
-  const DataTableViewType(
-      {super.key, required this.langState, required this.controller});
+  const DataTableViewType({
+    super.key,
+    required this.langState,
+    required this.controller,
+  });
   static const double _columnSpacing = 12;
 
   @override
@@ -62,139 +66,137 @@ class DataTableViewType extends ConsumerWidget {
     final langs = langState.orderdLangs;
     final rows = langState.getFilteredRows;
 
-    return LayoutBuilder(builder: (context, constraints) {
-      return DataTable2(
-        headingRowColor: WidgetStateColor.resolveWith(
-          (states) => Color(0xffF3F3F3),
-        ),
-        headingRowDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Color(0xffF3F3F3),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-        ),
-        headingTextStyle: const TextStyle(color: Color(0xff757575)),
-        headingCheckboxTheme: theme.checkboxTheme,
-        datarowCheckboxTheme: theme.checkboxTheme,
-        checkboxAlignment: Alignment.centerLeft,
-        isHorizontalScrollBarVisible: true,
-        isVerticalScrollBarVisible: true,
-        columnSpacing: _columnSpacing,
-        fixedLeftColumns: 0,
-        horizontalMargin: 12,
-        sortArrowBuilder: (ascending, sorted) => sorted
-            ? Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 0),
-                    child: _SortIcon(
-                      ascending: true,
-                      active: sorted && ascending,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: _SortIcon(
-                      ascending: false,
-                      active: sorted && !ascending,
-                    ),
-                  ),
-                ],
-              )
-            : null,
-        border: TableBorder(
-          top: BorderSide.none,
-          bottom: BorderSide.none,
-          left: BorderSide.none,
-          right: BorderSide.none,
-          verticalInside: BorderSide(
-            color: Theme.of(context).dividerColor,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final colorScheme = theme.colorScheme;
+        return DataTable2(
+          headingRowColor: WidgetStateColor.resolveWith(
+            (states) => colorScheme.surfaceContainerHighest,
           ),
-          horizontalInside: BorderSide.none,
-        ),
-        empty: Center(
-          child: Text('No Keys'),
-        ),
-        bottomMargin: 10,
-        sortColumnIndex: langState.sortColumnIndex,
-        sortAscending: langState.isSortAscending,
-        sortArrowIcon: Icons.keyboard_arrow_up,
-        sortArrowAnimationDuration: const Duration(milliseconds: 500),
-        onSelectAll: (val) => controller.onSelectAll(val),
-        showHeadingCheckBox: true,
-        columns: [
-          DataColumn2(
-            label: Text('Keys'),
-            onSort: (columnIndex, ascending) =>
-                controller.sort(SortByKeys(ascending)),
+          headingRowDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
           ),
-          ...langs.map((lang) {
-            return DataColumn2(
-              label: HoverBuilder(
-                builder: (isHovering) {
-                  return Row(
-                    children: [
-                      Text(lang.locale.localize(context)),
-                      Spacer(),
-                      if (lang.langCompletionPercentage != null && !isHovering)
-                        PercentageWidget(lang.langCompletionPercentage!),
-                    ],
-                  );
-                },
+          headingTextStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+          headingCheckboxTheme: theme.checkboxTheme,
+          datarowCheckboxTheme: theme.checkboxTheme,
+          checkboxAlignment: Alignment.centerLeft,
+          isHorizontalScrollBarVisible: true,
+          isVerticalScrollBarVisible: true,
+          columnSpacing: _columnSpacing,
+          fixedLeftColumns: 0,
+          horizontalMargin: 12,
+          sortArrowBuilder: (ascending, sorted) => sorted
+              ? Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 0),
+                      child: _SortIcon(
+                        ascending: true,
+                        active: sorted && ascending,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: _SortIcon(
+                        ascending: false,
+                        active: sorted && !ascending,
+                      ),
+                    ),
+                  ],
+                )
+              : null,
+          border: TableBorder(
+            top: BorderSide.none,
+            bottom: BorderSide.none,
+            left: BorderSide.none,
+            right: BorderSide.none,
+            verticalInside: BorderSide(color: Theme.of(context).dividerColor),
+            horizontalInside: BorderSide.none,
+          ),
+          empty: Center(child: Text('No Keys')),
+          bottomMargin: 10,
+          sortColumnIndex: langState.sortColumnIndex,
+          sortAscending: langState.isSortAscending,
+          sortArrowIcon: Icons.keyboard_arrow_up,
+          sortArrowAnimationDuration: const Duration(milliseconds: 500),
+          onSelectAll: (val) => controller.onSelectAll(val),
+          showHeadingCheckBox: true,
+          columns: [
+            DataColumn2(
+              label: Text('Keys'),
+              onSort: (columnIndex, ascending) =>
+                  controller.sort(SortByKeys(ascending)),
+            ),
+            ...langs.map((lang) {
+              return DataColumn2(
+                label: HoverBuilder(
+                  builder: (isHovering) {
+                    return Row(
+                      children: [
+                        Text(lang.locale.localize(context)),
+                        Spacer(),
+                        if (lang.langCompletionPercentage != null &&
+                            !isHovering)
+                          PercentageWidget(lang.langCompletionPercentage!),
+                      ],
+                    );
+                  },
+                ),
+                onSort: (columnIndex, ascending) => controller.sort(
+                  SortByValues(lang.locale, ascending, columnIndex),
+                ),
+              );
+            }),
+          ],
+          rows: List<DataRow>.generate(rows.length, (index) {
+            final row = rows[index];
+            final isLastIndex = index == rows.length - 1;
+            return DataRow2(
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: isLastIndex ? Radius.circular(10) : Radius.zero,
+                  bottomRight: isLastIndex ? Radius.circular(10) : Radius.zero,
+                ),
+                border: Border(
+                  bottom: BorderSide(color: Theme.of(context).dividerColor),
+                ),
               ),
-              onSort: (columnIndex, ascending) => controller
-                  .sort(SortByValues(lang.locale, ascending, columnIndex)),
+              specificRowHeight: _getRowHeight(
+                row,
+                langs.map((e) => e.locale).toList(),
+                constraints,
+                Theme.of(context).textTheme.bodyLarge!,
+              ),
+              onSelectChanged: (value) {
+                controller.toggleCheckmark(row.key);
+              },
+              selected: row.isSelected,
+              cells: [
+                DataCell(_KeyCellContent(row: row, controller: controller)),
+                ...langs.map((lang) {
+                  return DataCell(
+                    LangKeyValueInput(
+                      langRowModel: row,
+                      locale: lang.locale,
+                      onSave: (newValue) {
+                        controller.saveValue(
+                          focusedLang: lang.locale.toLanguageTag(),
+                          key: row.key,
+                          value: newValue,
+                        );
+                      },
+                    ),
+                  );
+                }),
+              ],
             );
           }),
-        ],
-        rows: List<DataRow>.generate(rows.length, (index) {
-          final row = rows[index];
-          final isLastIndex = index == rows.length - 1;
-          return DataRow2(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                bottomLeft: isLastIndex ? Radius.circular(10) : Radius.zero,
-                bottomRight: isLastIndex ? Radius.circular(10) : Radius.zero,
-              ),
-              border: Border(
-                bottom: BorderSide(color: Theme.of(context).dividerColor),
-              ),
-            ),
-            specificRowHeight: _getRowHeight(
-              row,
-              langs.map((e) => e.locale).toList(),
-              constraints,
-              Theme.of(context).textTheme.bodyLarge!,
-            ),
-            onSelectChanged: (value) {
-              controller.toggleCheckmark(row.key);
-            },
-            selected: row.isSelected,
-            cells: [
-              DataCell(_KeyCellContent(
-                row: row,
-                controller: controller,
-              )),
-              ...langs.map((lang) {
-                return DataCell(
-                  LangKeyValueInput(
-                    langRowModel: row,
-                    locale: lang.locale,
-                    onSave: (newValue) {
-                      controller.saveValue(
-                        focusedLang: lang.locale.toLanguageTag(),
-                        key: row.key,
-                        value: newValue,
-                      );
-                    },
-                  ),
-                );
-              }),
-            ],
-          );
-        }),
-      );
-    });
+        );
+      },
+    );
   }
 
   double? _getRowHeight(
@@ -211,24 +213,20 @@ class DataTableViewType extends ConsumerWidget {
       final columnSpacingArea = hasDoubleSpacing ? 6 : 0;
       final columnWidth = defaultColumnWidth - columnSpacingArea;
       final value = row.readValue(locale);
-      final textSpan = TextSpan(
-        text: value,
-        style: textStyle,
-      );
+      final textSpan = TextSpan(text: value, style: textStyle);
       final textPainter = TextPainter(
         text: textSpan,
         textDirection: value.textDirection(),
         locale: locale,
       );
-      textPainter.layout(
-        minWidth: 0,
-        maxWidth: columnWidth,
-      );
+      textPainter.layout(minWidth: 0, maxWidth: columnWidth);
       allHeights.add(textPainter.height + 24);
     }
 
-    return max(allHeights.maxOrNull?.toDouble() ?? kMinInteractiveDimension,
-        kMinInteractiveDimension);
+    return max(
+      allHeights.maxOrNull?.toDouble() ?? kMinInteractiveDimension,
+      kMinInteractiveDimension,
+    );
   }
 }
 
@@ -262,7 +260,9 @@ class _KeyCellContent extends StatelessWidget {
                                   onPressed: () {
                                     if (e is TypeCaseKeyWarning) {
                                       controller.replaceKey(
-                                          row.key, e.suggestedValue);
+                                        row.key,
+                                        e.suggestedValue,
+                                      );
                                     }
                                     Navigator.of(context).pop();
                                   },
@@ -283,30 +283,29 @@ class _KeyCellContent extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    border: row.warnings != null && row.warnings!.isNotEmpty
-                        ? Border(
-                            bottom: BorderSide(
-                                color: Theme.of(context).colorScheme.error,
-                                width: 2),
-                          )
-                        : null),
-                child: Text(
-                  row.key,
-                  style: DefaultTextStyle.of(context).style,
+                  border: row.warnings != null && row.warnings!.isNotEmpty
+                      ? Border(
+                          bottom: BorderSide(
+                            color: Theme.of(context).colorScheme.error,
+                            width: 2,
+                          ),
+                        )
+                      : null,
                 ),
+                child: Text(row.key, style: DefaultTextStyle.of(context).style),
               ),
               if (row.body.description != null)
                 Text(
                   row.body.description!,
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .copyWith(color: Colors.grey),
+                  style: DefaultTextStyle.of(context).style.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
             ],
           ),
         ),
         Spacer(),
-        PercentageWidget(row.completionPercentage)
+        PercentageWidget(row.completionPercentage),
       ],
     );
   }
