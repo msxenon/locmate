@@ -1,9 +1,9 @@
 name: example
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.11.0
 
-dependencies: 
+dependencies:
   locmate:
     path: ../packages/locmate
 
