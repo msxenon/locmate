@@ -5,7 +5,7 @@ homepage: https://github.com/msxenon/locmate
 repository: https://github.com/msxenon/locmate
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.9.2
 
 dependencies: 
   alfred: ^1.1.2+1

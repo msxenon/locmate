@@ -3,7 +3,7 @@ description: Visual editor for Application Resource Bundle localization files to
 version: 0.0.1
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.9.2
 
 dependencies: 
   melos: ^6.3.2
