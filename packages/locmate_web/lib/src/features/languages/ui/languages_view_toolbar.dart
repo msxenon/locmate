@@ -1,4 +1,3 @@
-import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
 
 import 'package:locmate_web/src/data/models/project_response.dart';
@@ -110,36 +109,34 @@ class _LanguagesViewToolbarState extends State<LanguagesViewToolbar> {
         ),
         Row(
           children: [
-            CustomSlidingSegmentedControl<MainTabs>(
-              initialValue: data.selectedTab,
-              children: {
-                MainTabs.all: Text('All (${data.allKeysCount})'),
-                MainTabs.uncompleted:
-                    Text('Uncompleted (${data.uncompleted.length})'),
-                MainTabs.warnings: Text('Problems (${data.problems.length})'),
-                MainTabs.selected: Text('Selected (${data.selectedKeysCount})'),
+            SegmentedButton<MainTabs>(
+              segments: [
+                ButtonSegment(
+                  value: MainTabs.all,
+                  label: Text('All (${data.allKeysCount})'),
+                ),
+                ButtonSegment(
+                  value: MainTabs.uncompleted,
+                  label: Text('Uncompleted (${data.uncompleted.length})'),
+                ),
+                ButtonSegment(
+                  value: MainTabs.warnings,
+                  label: Text('Problems (${data.problems.length})'),
+                ),
+                ButtonSegment(
+                  value: MainTabs.selected,
+                  label: Text('Selected (${data.selectedKeysCount})'),
+                ),
+              ],
+              selected: {data.selectedTab},
+              onSelectionChanged: (Set<MainTabs> selected) {
+                controller.changeTab(selected.first);
               },
-              decoration: BoxDecoration(
-                color: Color(0xffF0F0F0),
-                borderRadius: BorderRadius.circular(8),
+              style: ButtonStyle(
+                padding: WidgetStatePropertyAll(
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
               ),
-              thumbDecoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(6),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: .3),
-                    blurRadius: 4.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(0.0, 2.0),
-                  ),
-                ],
-              ),
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInToLinear,
-              onValueChanged: (v) {
-                controller.changeTab(v);
-              },
             ),
             Spacer(),
             TextButton.icon(
