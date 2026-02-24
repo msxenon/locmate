@@ -1,6 +1,7 @@
 name: locmate_workspace
 description: Visual editor for Application Resource Bundle localization files to be used with the intl package.
 version: 0.0.1
+repository: https://github.com/msxenon/locmate
 
 environment:
   sdk: ^3.11.0
@@ -17,14 +18,6 @@ melos:
   sdkPath: .fvm/flutter_sdk
 
   command:
-    version:
-      # Generate commit links in package changelogs.
-      linkToCommits: true
-      # # Only allow versioning to happen on main branch.
-      # branch: master
-      # Additionally build a changelog at the root of the workspace.
-      workspaceChangelog: true
-
     bootstrap:
       # It seems so that running "pub get" in parallel has some issues (like
       # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
