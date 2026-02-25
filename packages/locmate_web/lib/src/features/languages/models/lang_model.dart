@@ -8,8 +8,5 @@ class LangModel with LangModelMappable {
   final Locale locale;
   final int? langCompletionPercentage;
 
-  LangModel({
-    required this.locale,
-    required this.langCompletionPercentage,
-  });
+  LangModel({required this.locale, required this.langCompletionPercentage});
 }

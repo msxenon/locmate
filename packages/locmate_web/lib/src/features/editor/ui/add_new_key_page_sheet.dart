@@ -7,9 +7,7 @@ class AddNewKeyPageSheet extends PageSheetInterface {
   AddNewKeyPageSheet();
   @override
   List<Widget> mainContentSliversBuilder(BuildContext context) {
-    return [
-      SliverToBoxAdapter(child: _AddNewKey()),
-    ];
+    return [SliverToBoxAdapter(child: _AddNewKey())];
   }
 
   @override
@@ -57,14 +55,14 @@ class _AddNewLangWidgetState extends ConsumerState<_AddNewKey> {
             TextFormField(
               autofocus: true,
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Key*',
-              ),
+              decoration: const InputDecoration(labelText: 'Key*'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter some text';
                 }
-                final isValidKey = ref.read(languagesControllerProvider.notifier).isValidKey(value);
+                final isValidKey = ref
+                    .read(languagesControllerProvider.notifier)
+                    .isValidKey(value);
                 if (!isValidKey) {
                   return 'Key already exists';
                 }
@@ -74,9 +72,7 @@ class _AddNewLangWidgetState extends ConsumerState<_AddNewKey> {
             TextFormField(
               autofocus: true,
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-              ),
+              decoration: const InputDecoration(labelText: 'Description'),
             ),
             CheckboxListTile(
               title: const Text('Is plural?'),
@@ -86,11 +82,13 @@ class _AddNewLangWidgetState extends ConsumerState<_AddNewKey> {
             TextButton.icon(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  Navigator.of(context).pop(NewKeyData(
-                    keyName: _nameController.text,
-                    isPlural: isPlural,
-                    description: _descriptionController.text,
-                  ));
+                  Navigator.of(context).pop(
+                    NewKeyData(
+                      keyName: _nameController.text,
+                      isPlural: isPlural,
+                      description: _descriptionController.text,
+                    ),
+                  );
                 }
               },
               label: Text('Add'),

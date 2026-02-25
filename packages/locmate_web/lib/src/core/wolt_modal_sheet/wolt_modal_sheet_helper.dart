@@ -38,26 +38,30 @@ class WoltModalSheetHelper {
 
 class MWoltModalType extends WoltModalType {
   MWoltModalType()
-      : super(
-          shapeBorder: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(35)),
-          ),
-          dismissDirection: WoltModalDismissDirection.startToEnd,
-          showDragHandle: true,
-          closeProgressThreshold: 0.8,
-          barrierDismissible: true,
-        );
+    : super(
+        shapeBorder: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(35)),
+        ),
+        dismissDirection: WoltModalDismissDirection.startToEnd,
+        showDragHandle: true,
+        closeProgressThreshold: 0.8,
+        barrierDismissible: true,
+      );
   static const double _breakPoint = 524;
 
   @override
   String routeLabel(BuildContext context) {
-    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    final MaterialLocalizations localizations = MaterialLocalizations.of(
+      context,
+    );
     return localizations.dialogLabel;
   }
 
   @override
   BoxConstraints layoutModal(Size availableSize) {
-    final availableWidth = availableSize.width >= _breakPoint ? _breakPoint : availableSize.width;
+    final availableWidth = availableSize.width >= _breakPoint
+        ? _breakPoint
+        : availableSize.width;
 
     return BoxConstraints(
       minWidth: availableWidth,
@@ -68,14 +72,21 @@ class MWoltModalType extends WoltModalType {
   }
 
   @override
-  Offset positionModal(Size availableSize, Size modalContentSize, TextDirection textDirection) {
+  Offset positionModal(
+    Size availableSize,
+    Size modalContentSize,
+    TextDirection textDirection,
+  ) {
     final xPos = (availableSize.width - modalContentSize.width) / 2;
-    return Offset(xPos, max(0, (availableSize.height / 2) - (modalContentSize.height / 2)));
+    return Offset(
+      xPos,
+      max(0, (availableSize.height / 2) - (modalContentSize.height / 2)),
+    );
   }
 
   WoltModalTypeBuilder get modalTypeBuilder => (_) {
-        return WoltModalType.alertDialog();
-      };
+    return WoltModalType.alertDialog();
+  };
 
   @override
   Widget buildTransitions(
@@ -84,11 +95,21 @@ class MWoltModalType extends WoltModalType {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    return modalTypeBuilder(context).buildTransitions(context, animation, secondaryAnimation, child);
+    return modalTypeBuilder(
+      context,
+    ).buildTransitions(context, animation, secondaryAnimation, child);
   }
 
   @override
-  Widget decoratePageContent(BuildContext context, Widget child, bool useSafeArea) {
-    return super.decoratePageContent(context, MBackdropBlur(child: SafeArea(top: false, child: child)), useSafeArea);
+  Widget decoratePageContent(
+    BuildContext context,
+    Widget child,
+    bool useSafeArea,
+  ) {
+    return super.decoratePageContent(
+      context,
+      MBackdropBlur(child: SafeArea(top: false, child: child)),
+      useSafeArea,
+    );
   }
 }

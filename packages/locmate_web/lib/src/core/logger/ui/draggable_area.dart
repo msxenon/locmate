@@ -20,9 +20,16 @@ class DraggableArea extends StatefulWidget {
   State<DraggableArea> createState() => _DraggableArea();
 }
 
-class _DraggableArea extends State<DraggableArea> with SingleTickerProviderStateMixin {
-  double get _availableWidth => widget.size.width - widget.draggable.preferredSize.width - widget.padding.horizontal;
-  double get _availableHeight => widget.size.height - widget.draggable.preferredSize.height - widget.padding.vertical;
+class _DraggableArea extends State<DraggableArea>
+    with SingleTickerProviderStateMixin {
+  double get _availableWidth =>
+      widget.size.width -
+      widget.draggable.preferredSize.width -
+      widget.padding.horizontal;
+  double get _availableHeight =>
+      widget.size.height -
+      widget.draggable.preferredSize.height -
+      widget.padding.vertical;
 
   late Alignment _alignment = widget.initialAlignment;
   late Offset _position = _calculatePosition();
@@ -67,16 +74,10 @@ class _DraggableArea extends State<DraggableArea> with SingleTickerProviderState
   void _onPanRelease(DragEndDetails details) {
     final horCorrection = details.velocity.pixelsPerSecond.dx * 0.1;
     final verCorrection = details.velocity.pixelsPerSecond.dy * 0.1;
-    _alignDraggable(
-      horCorrection: horCorrection,
-      verCorrection: verCorrection,
-    );
+    _alignDraggable(horCorrection: horCorrection, verCorrection: verCorrection);
   }
 
-  void _alignDraggable({
-    double horCorrection = 0,
-    double verCorrection = 0,
-  }) {
+  void _alignDraggable({double horCorrection = 0, double verCorrection = 0}) {
     final correctedOffset = Offset(
       _position.dx + horCorrection - widget.padding.left,
       _position.dy + verCorrection - widget.padding.top,
@@ -85,9 +86,10 @@ class _DraggableArea extends State<DraggableArea> with SingleTickerProviderState
       (correctedOffset.dx / _availableWidth).round().clamp(0, 1) * 2 - 1,
       (correctedOffset.dy / _availableHeight).round().clamp(0, 1) * 2 - 1,
     );
-    _positionTween = Tween(begin: _position, end: _calculatePosition()).chain(
-      CurveTween(curve: Curves.bounceIn),
-    );
+    _positionTween = Tween(
+      begin: _position,
+      end: _calculatePosition(),
+    ).chain(CurveTween(curve: Curves.bounceIn));
 
     _animationController.forward(from: 0);
   }
@@ -111,16 +113,16 @@ class _DraggableArea extends State<DraggableArea> with SingleTickerProviderState
     return Stack(
       children: [
         widget.child,
-          Positioned(
-            left: _position.dx,
-            top: _position.dy,
-            child: GestureDetector(
-              onPanStart: (_) => _onPanStart(),
-              onPanUpdate: _onPanUpdate,
-              onPanEnd: _onPanRelease,
-              child: widget.draggable,
-            ),
+        Positioned(
+          left: _position.dx,
+          top: _position.dy,
+          child: GestureDetector(
+            onPanStart: (_) => _onPanStart(),
+            onPanUpdate: _onPanUpdate,
+            onPanEnd: _onPanRelease,
+            child: widget.draggable,
           ),
+        ),
       ],
     );
   }

@@ -9,7 +9,13 @@ void main() {
     final arTemplate = LocalePluralMapper()('ar');
     final be = LocalePluralMapper()('be');
     expect(enTemplate, [PluralCase.zero, PluralCase.one, PluralCase.other]);
-    expect(ruTemplate, [PluralCase.zero, PluralCase.one, PluralCase.few, PluralCase.many, PluralCase.other]);
+    expect(ruTemplate, [
+      PluralCase.zero,
+      PluralCase.one,
+      PluralCase.few,
+      PluralCase.many,
+      PluralCase.other,
+    ]);
     expect(arTemplate, [
       PluralCase.zero,
       PluralCase.one,
@@ -18,6 +24,12 @@ void main() {
       PluralCase.many,
       PluralCase.other,
     ]);
-    expect(be, [PluralCase.zero, PluralCase.one, PluralCase.few, PluralCase.many, PluralCase.other]);
+    expect(be, [
+      PluralCase.zero,
+      PluralCase.one,
+      PluralCase.few,
+      PluralCase.many,
+      PluralCase.other,
+    ]);
   });
 }

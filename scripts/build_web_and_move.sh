@@ -13,7 +13,7 @@ PROJECT_DIR="packages/locmate_web"
 PROJECT_BUILD_OUTPUT="$PROJECT_DIR/build/web"
 
 # Clone directory that must always match the original
-CLONE_DIR="packages/locmate/web_output"
+CLONE_DIR="web_output"
 
 ###
 # STEP 1 — NAVIGATE TO PROJECT AND BUILD
@@ -29,7 +29,7 @@ cd "$PROJECT_DIR"
 
 echo "🚀 Building Flutter web app in '$PROJECT_DIR'..."
 # The output will be created inside: $PROJECT_DIR/build/web
-flutter build web --wasm
+flutter build web --wasm --tree-shake-icons
 
 # Changing back to the script's root directory for subsequent steps
 cd -

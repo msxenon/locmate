@@ -15,7 +15,7 @@ class LoggerScreen extends StatefulWidget {
 class _LoggerScreenState extends State<LoggerScreen> {
   final mergedStream = StreamGroup.merge([
     LoggerService.instance.webOutput.stream,
-    LoggerService.instance.serverOutput.stream
+    LoggerService.instance.serverOutput.stream,
   ]).asBroadcastStream();
   @override
   Widget build(BuildContext context) {

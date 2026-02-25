@@ -25,7 +25,8 @@ class ProjectSettingsController extends _$ProjectSettingsController {
     switch (projectResponse) {
       case ProjectData x:
         return LocmateSettingsState(
-          projectName: x.locmateSettingsModel?.projectName ??
+          projectName:
+              x.locmateSettingsModel?.projectName ??
               x.pubspecProjectName ??
               _defaultState.projectName,
           keyFormat:
@@ -61,8 +62,11 @@ class ProjectSettingsController extends _$ProjectSettingsController {
   void toggleLangSelection(String lang) {
     final selectedLangs = state.value!.selectedLangs;
     if (selectedLangs.contains(lang)) {
-      state = AsyncData(state.value!.copyWith(
-          selectedLangs: selectedLangs.where((e) => e != lang).toList()));
+      state = AsyncData(
+        state.value!.copyWith(
+          selectedLangs: selectedLangs.where((e) => e != lang).toList(),
+        ),
+      );
     } else {
       final newSelectedLangs = {...selectedLangs, lang};
       if (newSelectedLangs.length == state.value!.localesOrder.length) {
@@ -71,7 +75,8 @@ class ProjectSettingsController extends _$ProjectSettingsController {
         return;
       }
       state = AsyncData(
-          state.value!.copyWith(selectedLangs: newSelectedLangs.toList()));
+        state.value!.copyWith(selectedLangs: newSelectedLangs.toList()),
+      );
     }
   }
 
@@ -96,11 +101,14 @@ class ProjectSettingsController extends _$ProjectSettingsController {
           .fileOp(FileOpContextDelete(path: arbFilePath));
     }
 
-    state = AsyncData(state.value!.copyWith(
+    state = AsyncData(
+      state.value!.copyWith(
         selectedLangs: [],
         localesOrder: state.value!.localesOrder
             .where((e) => !selectedLangs.contains(e))
-            .toList()));
+            .toList(),
+      ),
+    );
     save();
   }
 }

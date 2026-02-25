@@ -1,10 +1,82 @@
-name: locmate_workspace
+name: locmate
 description: Visual editor for Application Resource Bundle localization files to be used with the intl package.
-version: 0.0.1
+version: 0.0.5
+repository: https://github.com/msxenon/locmate
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.11.0
 
-dependencies: 
-  melos: ^6.3.2
+workspace:
+  - packages/locmate_web
+  - example
 
+dependencies:
+  melos: ^7.4.0
+  alfred: ^1.1.2+1
+  tint: ^2.0.1
+  emojis: ^0.9.9
+  dart_mappable: ^4.4.0
+  web_socket_channel: ^3.0.3
+
+dev_dependencies:
+  lints: ^5.1.1
+  build_runner: ^2.1.4
+  dart_mappable_builder: ^4.2.3
+
+pubghost:
+  ignore_dependencies:
+    - lints
+    - melos
+  
+melos:
+  useRootAsPackage: true
+  sdkPath: .fvm/flutter_sdk
+
+  command:
+    bootstrap:
+      # It seems so that running "pub get" in parallel has some issues (like
+      # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
+      # makes the CI much more stable.
+      runPubGetInParallel: false
+
+  scripts:
+    gen:
+      run: melos exec --depends-on="build_runner" dart run build_runner build --delete-conflicting-outputs
+    tests:
+      run: melos exec --fail-fast --depends-on="flutter_test" -- flutter test
+
+    build:
+      run: sh scripts/build_web_and_move.sh
+
+    locmate:
+      run: cd example && dart pub run locmate
+
+    buildLocmate:
+      run: melos run build && melos run locmate
+
+    kClean:
+      run: melos exec flutter clean
+
+    patrolTest:
+      run: sh packages/locmate_web/patrol_test/run.sh
+
+    healthChecks:
+      run: |
+        set -e
+        dart format $(git ls-files | grep '\.dart$') --set-exit-if-changed
+        melos exec --fail-fast dart analyze --fatal-infos --fatal-warnings .
+        melos run gen
+        melos exec pubghost -d
+        melos exec pubghost -c
+        melos run tests
+        melos run patrolTest
+
+    prePublishChecks:
+      run: |
+        set -e
+        melos run healthChecks
+        melos run build
+        dart run scripts/check_web_versions.dart
+        
+executables: 
+  locmate: locmate

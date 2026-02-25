@@ -24,26 +24,29 @@ void main() {
     registerFallbackValue(FileOpContextRead(path: ''));
     projectManager = MockProjectManager();
     mockSharedPrefrencesWrapper = MockSharedPrefrencesWrapper();
-    when(() => mockSharedPrefrencesWrapper.getString(any()))
-        .thenAnswer((_) async => null);
-    when(() => mockSharedPrefrencesWrapper.setString(any(), any()))
-        .thenAnswer((_) async {});
+    when(
+      () => mockSharedPrefrencesWrapper.getString(any()),
+    ).thenAnswer((_) async => null);
+    when(
+      () => mockSharedPrefrencesWrapper.setString(any(), any()),
+    ).thenAnswer((_) async {});
     projectRepository = MockProjectRepository();
-    when(() => projectRepository.saveArbFileContent(any(), any()))
-        .thenAnswer((_) async => VoidOpResponse());
+    when(
+      () => projectRepository.saveArbFileContent(any(), any()),
+    ).thenAnswer((_) async => VoidOpResponse());
 
-    final container = ProviderContainer(overrides: [
-      projectManagerProvider.overrideWith(() => projectManager),
-      sharedPrefrencesWrapperProvider
-          .overrideWith((_) => mockSharedPrefrencesWrapper),
-      projectRepositoryProvider.overrideWithValue(projectRepository),
-    ]);
+    final container = ProviderContainer(
+      overrides: [
+        projectManagerProvider.overrideWith(() => projectManager),
+        sharedPrefrencesWrapperProvider.overrideWith(
+          (_) => mockSharedPrefrencesWrapper,
+        ),
+        projectRepositoryProvider.overrideWithValue(projectRepository),
+      ],
+    );
     arbFileEntities = [
       ArbFileEntity(
-        values: {
-          '@@locale': 'en',
-          'hello': 'Hello',
-        },
+        values: {'@@locale': 'en', 'hello': 'Hello'},
         fileName: 'app_en.arb',
       ),
     ];
@@ -51,7 +54,10 @@ void main() {
       ProjectData(
         projectPath: '/test/path',
         locmateSettingsModel: LocmateSettingsModel(
-            projectName: '', keyFormat: null, localesOrder: []),
+          projectName: '',
+          keyFormat: null,
+          localesOrder: [],
+        ),
         l10nYaml: L10nYamlModel(arbDir: '', templateArbFile: ''),
         arbFileEntities: arbFileEntities,
       ),
@@ -64,16 +70,21 @@ void main() {
     test('add a new key', () async {
       await languagesController.addNewKey(
         NewKeyData(
-            keyName: 'testKey', isPlural: false, description: 'A test key'),
+          keyName: 'testKey',
+          isPlural: false,
+          description: 'A test key',
+        ),
       );
 
       final content = arbFileEntities.first.values;
 
       print(content);
-      verify(() => projectRepository.saveArbFileContent(
-            '/test/path/app_en.arb',
-            content,
-          )).called(1);
+      verify(
+        () => projectRepository.saveArbFileContent(
+          '/test/path/app_en.arb',
+          content,
+        ),
+      ).called(1);
     });
   });
 }

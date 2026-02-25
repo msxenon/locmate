@@ -15,16 +15,19 @@ void main() {
       "@key5": {
         "placeholders": {
           "duration": {"type": "String"},
-          "shiftName": {"type": "String"}
-        }
-      }
+          "shiftName": {"type": "String"},
+        },
+      },
     };
     final arbItems = ArbItems.fromMap(arbContent);
 
     expect(arbItems.items.length, 9);
     expect(arbItems.items[0], KeyValueItem(key: "@@locale", value: "en"));
     expect(arbItems.items[1], KeyValueItem(key: "key2", value: "Key2ValuEn"));
-    expect(arbItems.items[2], KeyBodyItem(key: "@key2", description: "Key2 description"));
+    expect(
+      arbItems.items[2],
+      KeyBodyItem(key: "@key2", description: "Key2 description"),
+    );
     expect(arbItems.items[3], KeyValueItem(key: "key1", value: "jnj\n"));
     expect(arbItems.items[4], KeyValueItem(key: "key3", value: ""));
     expect(arbItems.items[5], KeyValueItem(key: "key4", value: ""));
@@ -43,7 +46,7 @@ void main() {
         key: "@key5",
         placeholders: [
           KeyBodyPlaceholder(key: "duration", type: "String"),
-          KeyBodyPlaceholder(key: "shiftName", type: "String")
+          KeyBodyPlaceholder(key: "shiftName", type: "String"),
         ],
       ),
     );

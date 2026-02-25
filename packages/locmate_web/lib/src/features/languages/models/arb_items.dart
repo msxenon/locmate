@@ -1,7 +1,10 @@
 import 'package:dart_mappable/dart_mappable.dart';
 part 'arb_items.mapper.dart';
 
-@MappableClass(generateMethods: GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify)
+@MappableClass(
+  generateMethods:
+      GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify,
+)
 class ArbItems with ArbItemsMappable {
   final List<KeyItem> items;
   ArbItems({required this.items});
@@ -11,53 +14,58 @@ class ArbItems with ArbItemsMappable {
       if (e.value is String) {
         return KeyValueItem(key: e.key, value: e.value);
       } else {
-        final placeHoldersMap = e.value['placeholders'] as Map<String, dynamic>?;
+        final placeHoldersMap =
+            e.value['placeholders'] as Map<String, dynamic>?;
         final placeholders = placeHoldersMap?.entries.map((e) {
           return KeyBodyPlaceholder(key: e.key, type: e.value['type']);
         }).toList();
-        return KeyBodyItem(key: e.key, description: e.value['description'], placeholders: placeholders);
+        return KeyBodyItem(
+          key: e.key,
+          description: e.value['description'],
+          placeholders: placeholders,
+        );
       }
     }).toList();
     return ArbItems(items: items);
   }
 }
 
-@MappableClass(generateMethods: GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify)
+@MappableClass(
+  generateMethods:
+      GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify,
+)
 sealed class KeyItem with KeyItemMappable {
   final String key;
-  KeyItem({
-    required this.key,
-  });
+  KeyItem({required this.key});
 }
 
-@MappableClass(generateMethods: GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify)
+@MappableClass(
+  generateMethods:
+      GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify,
+)
 class KeyValueItem extends KeyItem with KeyValueItemMappable {
   final String value;
-  KeyValueItem({
-    required super.key,
-    required this.value,
-  });
+  KeyValueItem({required super.key, required this.value});
 }
 
-@MappableClass(generateMethods: GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify)
+@MappableClass(
+  generateMethods:
+      GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify,
+)
 class KeyBodyItem extends KeyItem with KeyBodyItemMappable {
   final String? description;
   final List<KeyBodyPlaceholder>? placeholders;
-  KeyBodyItem({
-    required super.key,
-    this.description,
-    this.placeholders,
-  });
+  KeyBodyItem({required super.key, this.description, this.placeholders});
 }
 
-@MappableClass(generateMethods: GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify)
+@MappableClass(
+  generateMethods:
+      GenerateMethods.equals | GenerateMethods.copy | GenerateMethods.stringify,
+)
 class KeyBodyPlaceholder with KeyBodyPlaceholderMappable {
   final String key;
   final String? type;
-  KeyBodyPlaceholder({
-    required this.key,
-    this.type,
-  });
+  KeyBodyPlaceholder({required this.key, this.type});
 }
 
 extension ArbItemsExtension on ArbItems {
@@ -72,8 +80,9 @@ extension ArbItemsExtension on ArbItems {
           if (description != null) 'description': description,
           if (item.placeholders != null)
             'placeholders': {
-              for (final placeholder in item.placeholders!) placeholder.key: {'type': placeholder.type}
-            }
+              for (final placeholder in item.placeholders!)
+                placeholder.key: {'type': placeholder.type},
+            },
         };
       }
     }

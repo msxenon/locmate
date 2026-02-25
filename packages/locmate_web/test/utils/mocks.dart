@@ -14,4 +14,5 @@ class MockProjectManager extends AsyncNotifier<ProjectResponse>
     with Mock
     implements ProjectManager {}
 
-class MockSharedPrefrencesWrapper extends Mock implements SharedPrefrencesWrapper {}
+class MockSharedPrefrencesWrapper extends Mock
+    implements SharedPrefrencesWrapper {}

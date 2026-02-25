@@ -32,13 +32,15 @@ sealed class ValueContainer with ValueContainerMappable {
 }
 
 @MappableClass(ignoreNull: true)
-class StringValueContainer extends ValueContainer with StringValueContainerMappable {
+class StringValueContainer extends ValueContainer
+    with StringValueContainerMappable {
   final String? value;
   StringValueContainer({required this.value});
 }
 
 @MappableClass(ignoreNull: true)
-class PluralValueContainer extends ValueContainer with PluralValueContainerMappable {
+class PluralValueContainer extends ValueContainer
+    with PluralValueContainerMappable {
   final Map<PluralCase, String?> values;
   PluralValueContainer({required this.values});
 }
@@ -73,10 +75,7 @@ class KeyBody with KeyBodyMappable {
   final String? description;
   final List<KeyPlaceholder>? placeholders;
 
-  KeyBody({
-    required this.description,
-    this.placeholders,
-  });
+  KeyBody({required this.description, this.placeholders});
 }
 
 class KeyBodyHook extends MappingHook {
@@ -90,11 +89,9 @@ class KeyBodyHook extends MappingHook {
         final placeholders = value['placeholders'] as Map?;
         final fixedMap = Map<String, dynamic>.from(value);
         fixedMap['placeholders'] = [
-          for (final entry in placeholders?.entries ?? <MapEntry<String, dynamic>>[])
-            <String, dynamic>{
-              'key': entry.key,
-              ...entry.value,
-            }
+          for (final entry
+              in placeholders?.entries ?? <MapEntry<String, dynamic>>[])
+            <String, dynamic>{'key': entry.key, ...entry.value},
         ];
         return fixedMap;
       }
@@ -115,7 +112,7 @@ class KeyBodyHook extends MappingHook {
             for (final placeholder in placeholders)
               placeholder.key: {
                 if (placeholder.type != null) 'type': placeholder.type,
-              }
+              },
           },
       };
     }
@@ -128,10 +125,7 @@ class KeyBodyHook extends MappingHook {
 class KeyPlaceholder with KeyPlaceholderMappable {
   final String key;
   final String? type;
-  KeyPlaceholder({
-    required this.key,
-    this.type,
-  });
+  KeyPlaceholder({required this.key, this.type});
 }
 
 extension LangRowModelExtension on LangRowModel {
@@ -156,7 +150,9 @@ extension LangRowModelExtension on LangRowModel {
 
 extension StringExtension on String {
   TextDirection textDirection() {
-    return intl.Bidi.estimateDirectionOfText(this) == intl.TextDirection.RTL ? TextDirection.rtl : TextDirection.ltr;
+    return intl.Bidi.estimateDirectionOfText(this) == intl.TextDirection.RTL
+        ? TextDirection.rtl
+        : TextDirection.ltr;
   }
 
   String get capitalizeFirst {
