@@ -63,7 +63,7 @@ melos:
     healthChecks:
       run: |
         set -e
-        melos exec --fail-fast dart format --set-exit-if-changed .
+        dart format $(git ls-files | grep '\.dart$') --set-exit-if-changed
         melos exec --fail-fast dart analyze --fatal-infos --fatal-warnings .
         melos run gen
         melos exec pubghost -d
