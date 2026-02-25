@@ -1,6 +1,6 @@
 name: locmate
 description: Visual editor for Application Resource Bundle localization files to be used with the intl package.
-version: 0.0.1
+version: 0.0.3
 repository: https://github.com/msxenon/locmate
 
 environment:
@@ -26,6 +26,7 @@ dev_dependencies:
 pubghost:
   ignore_dependencies:
     - lints
+    - melos
   
 melos:
   useRootAsPackage: true
@@ -61,6 +62,7 @@ melos:
 
     healthChecks:
       run: |
+        set -e
         melos exec --fail-fast dart format --set-exit-if-changed .
         melos exec --fail-fast dart analyze --fatal-infos --fatal-warnings .
         melos run gen
