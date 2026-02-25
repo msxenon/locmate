@@ -1,6 +1,5 @@
 build
 *.iml
 media/**
-packages/locmate_web
 scripts/**
 test/**
