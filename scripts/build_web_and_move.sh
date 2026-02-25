@@ -29,7 +29,7 @@ cd "$PROJECT_DIR"
 
 echo "🚀 Building Flutter web app in '$PROJECT_DIR'..."
 # The output will be created inside: $PROJECT_DIR/build/web
-flutter build web --wasm
+flutter build web --wasm --tree-shake-icons
 
 # Changing back to the script's root directory for subsequent steps
 cd -

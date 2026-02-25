@@ -66,10 +66,10 @@ dart pub global activate locmate
 
 ### Usage
 
-Navigate to the directory containing the `l10n.yaml` file in your terminal, then run:
+Navigate to the directory containing the your app or `l10n.yaml` file in your terminal, then run:
 
 ```bash
-dart pub global run locmate
+locmate
 ```
 
 ---

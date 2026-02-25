@@ -1,6 +1,6 @@
 name: locmate
 description: Visual editor for Application Resource Bundle localization files to be used with the intl package.
-version: 0.0.1
+version: 0.0.5
 repository: https://github.com/msxenon/locmate
 
 environment:
@@ -26,6 +26,7 @@ dev_dependencies:
 pubghost:
   ignore_dependencies:
     - lints
+    - melos
   
 melos:
   useRootAsPackage: true
@@ -61,7 +62,8 @@ melos:
 
     healthChecks:
       run: |
-        melos exec --fail-fast dart format --set-exit-if-changed .
+        set -e
+        dart format $(git ls-files | grep '\.dart$') --set-exit-if-changed
         melos exec --fail-fast dart analyze --fatal-infos --fatal-warnings .
         melos run gen
         melos exec pubghost -d
@@ -75,3 +77,6 @@ melos:
         melos run healthChecks
         melos run build
         dart run scripts/check_web_versions.dart
+        
+executables: 
+  locmate: locmate
