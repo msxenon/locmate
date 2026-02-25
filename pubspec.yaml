@@ -81,7 +81,7 @@ melos:
     publish:
       run: |
         set -e
-        melos run healthChecks
+        melos run prePublishChecks
         dart pub publish
 
 executables: 
