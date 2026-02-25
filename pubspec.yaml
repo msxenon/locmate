@@ -77,12 +77,6 @@ melos:
         melos run healthChecks
         melos run build
         dart run scripts/check_web_versions.dart
-
-    publish:
-      run: |
-        set -e
-        melos run prePublishChecks
-        dart pub publish
-
+        
 executables: 
   locmate:
