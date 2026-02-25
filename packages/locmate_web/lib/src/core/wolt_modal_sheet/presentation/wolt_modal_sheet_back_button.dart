@@ -26,7 +26,10 @@ class WoltModalSheetBackButton extends StatelessWidget {
   }
 
   String semanticsLabel(BuildContext context) {
-    return Localizations.of<MaterialLocalizations>(context, MaterialLocalizations)?.backButtonTooltip ??
+    return Localizations.of<MaterialLocalizations>(
+          context,
+          MaterialLocalizations,
+        )?.backButtonTooltip ??
         const DefaultMaterialLocalizations().backButtonTooltip;
   }
 }

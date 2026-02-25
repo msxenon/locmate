@@ -8,8 +8,9 @@ class MBackdropBlur extends StatelessWidget {
   const MBackdropBlur({super.key, required this.child});
   @override
   Widget build(BuildContext context) {
-    final color =
-        Theme.of(context).brightness == Brightness.light ? Colors.white : Theme.of(context).colorScheme.surface;
+    final color = Theme.of(context).brightness == Brightness.light
+        ? Colors.white
+        : Theme.of(context).colorScheme.surface;
     return ClipRRect(
       child: ColoredBox(
         color: color.withValues(alpha: 0.5),

@@ -9,7 +9,12 @@ class DebugWrapper extends ConsumerStatefulWidget {
   final bool enabled;
   final AppRouter router;
 
-  const DebugWrapper({super.key, required this.child, required this.enabled, required this.router});
+  const DebugWrapper({
+    super.key,
+    required this.child,
+    required this.enabled,
+    required this.router,
+  });
 
   @override
   ConsumerState<DebugWrapper> createState() => _DebugWrapperState();
@@ -42,9 +47,7 @@ class _DebugWrapperState extends ConsumerState<DebugWrapper> {
           top: MediaQuery.viewPaddingOf(context).top + 40,
           bottom: MediaQuery.viewPaddingOf(context).bottom + 70,
         ),
-        draggable: DebugScreenButton(
-          onTap: () => _onButtonTap(context),
-        ),
+        draggable: DebugScreenButton(onTap: () => _onButtonTap(context)),
         child: widget.child,
       ),
     );

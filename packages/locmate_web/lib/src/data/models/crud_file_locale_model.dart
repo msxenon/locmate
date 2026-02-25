@@ -8,10 +8,8 @@ class ArbFileEntity with ArbFileEntityMappable {
   final Map<String, dynamic> values;
   final String fileName;
   final Locale locale;
-  ArbFileEntity({
-    required this.values,
-    required this.fileName,
-  }) : locale = Locale(values['@@locale'] as String);
+  ArbFileEntity({required this.values, required this.fileName})
+    : locale = Locale(values['@@locale'] as String);
 }
 
 extension ArbFileEntityX on ArbFileEntity {

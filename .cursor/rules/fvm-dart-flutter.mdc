@@ -1,0 +1,33 @@
+---
+description: Use FVM for all Dart and Flutter commands
+globs: "**/*.dart,**/pubspec.yaml,**/pubspec.lock"
+alwaysApply: false
+---
+
+# Use FVM for Dart and Flutter
+
+When running Dart or Flutter commands in this project, always use FVM so the version from `.fvmrc` is used.
+
+## Commands
+
+- Use **`fvm dart`** instead of `dart` (e.g. `fvm dart run`, `fvm dart pub get`, `fvm dart analyze`)
+- Use **`fvm flutter`** instead of `flutter` (e.g. `fvm flutter run`, `fvm flutter pub get`, `fvm flutter test`)
+
+## Examples
+
+```bash
+# ✅ GOOD
+fvm flutter pub get
+fvm flutter run
+fvm dart analyze
+fvm dart test
+
+# ❌ BAD (bypasses FVM)
+flutter pub get
+dart analyze
+```
+
+## When editing or suggesting commands
+
+- In terminal commands, scripts, and documentation: use `fvm dart` and `fvm flutter`.
+- If the project has `.fvmrc`, assume FVM is required and never suggest bare `dart` or `flutter` for local runs.

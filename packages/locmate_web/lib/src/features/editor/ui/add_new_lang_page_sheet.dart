@@ -5,9 +5,7 @@ import 'package:locmate_web/src/core/wolt_modal_sheet/presentation/paged_selecto
 class AddNewLangPageSheet extends PageSheetInterface {
   @override
   List<Widget> mainContentSliversBuilder(BuildContext context) {
-    return [
-      const SliverToBoxAdapter(child: AddNewLangWidget()),
-    ];
+    return [const SliverToBoxAdapter(child: AddNewLangWidget())];
   }
 
   @override

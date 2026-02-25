@@ -27,9 +27,9 @@ Future<void> takeScreenshot(
   try {
     final screenshotWrapperWidget = tester.tester
         .state<ScreenshotWrapperWidgetState>(
-            find.byType(ScreenshotWrapperWidget));
+          find.byType(ScreenshotWrapperWidget),
+        );
     final screenshotController = screenshotWrapperWidget.screenshotController;
-    final sanitized = _sanitizeFileName(testName);
 
     final image = await screenshotController.capture();
     if (image == null) {
@@ -46,13 +46,16 @@ Future<void> takeScreenshot(
     }
 
     final client = HostBridgeClient(hostBridgeUrl);
-    const screenshotsDir = 'packages/locmate_web/patrol_test/failures';
-    final pngPath = '$screenshotsDir/$sanitized.png';
+    final sanitizedTestName = _stringToFileName(testName);
+
+    final screenshotsDir =
+        'packages/locmate_web/patrol_test/failures/$sanitizedTestName';
+    final dateTime = _formatDateTime(DateTime.now());
+
+    final pngPath = '$screenshotsDir/$dateTime.png';
 
     final mkdirResult = await client.runCommand(
-      RunCommandRequestModel(
-        command: 'mkdir -p $screenshotsDir',
-      ),
+      RunCommandRequestModel(command: 'mkdir -p $screenshotsDir'),
     );
     verbosePrint('takeScreenshot mkdir result: $mkdirResult');
     final result = await client.runCommand(
@@ -68,7 +71,17 @@ Future<void> takeScreenshot(
   }
 }
 
-String _sanitizeFileName(String name) {
+String _formatDateTime(DateTime dt) {
+  final y = dt.year.toString().padLeft(4, '0');
+  final m = dt.month.toString().padLeft(2, '0');
+  final d = dt.day.toString().padLeft(2, '0');
+  final h = dt.hour.toString().padLeft(2, '0');
+  final min = dt.minute.toString().padLeft(2, '0');
+  final s = dt.second.toString().padLeft(2, '0');
+  return '$y-$m-${d}_$h-$min-$s';
+}
+
+String _stringToFileName(String name) {
   return name
       .replaceAll(RegExp(r'[^\w\s-]'), '')
       .replaceAll(RegExp(r'\s+'), '_')

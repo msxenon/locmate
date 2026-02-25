@@ -1,11 +1,13 @@
 name: example
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.11.0
 
-dependencies: 
+resolution: workspace
+
+dependencies:
   locmate:
-    path: ../packages/locmate
+    path: ../
 
 pubghost:
   ignore_dependencies:

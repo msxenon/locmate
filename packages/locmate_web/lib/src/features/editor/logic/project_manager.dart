@@ -23,8 +23,9 @@ class ProjectManager extends _$ProjectManager {
     final x = await ref.read(projectDatasourceProvider).getProjectPath();
 
     try {
-      final locmateSettingsModel =
-          await ref.read(projectRepositoryProvider).getLocmateModel();
+      final locmateSettingsModel = await ref
+          .read(projectRepositoryProvider)
+          .getLocmateModel();
       final l10nYaml = await ref.read(projectRepositoryProvider).getL10nModel();
       if (l10nYaml == null) {
         return ProjectEmpty(projectPath: x);
@@ -41,7 +42,7 @@ class ProjectManager extends _$ProjectManager {
         ),
       );
     } catch (e) {
-      if (!kReleaseMode ) {
+      if (!kReleaseMode) {
         rethrow;
       }
       return ProjectEmpty(projectPath: x);
@@ -74,9 +75,9 @@ class ProjectManager extends _$ProjectManager {
     if (fullPath == null) {
       return;
     }
-    await ref
-        .read(projectRepositoryProvider)
-        .saveArbFileContent(fullPath, {'@@locale': locale});
+    await ref.read(projectRepositoryProvider).saveArbFileContent(fullPath, {
+      '@@locale': locale,
+    });
 
     ref.invalidateSelf();
   }
@@ -94,19 +95,21 @@ class ProjectManager extends _$ProjectManager {
   Future<void> createNewProject() async {
     final pubspecProjectName = await getPubspecProjectName();
     final demoLocmateYaml = LocmateSettingsModel(
-        projectName: pubspecProjectName ?? 'New project',
-        keyFormat: KeyFormat.camelCase,
-        localesOrder: ['en']);
-    final demoL10nYaml =
-        L10nYamlModel(arbDir: 'lib/l10n', templateArbFile: 'app_en.arb');
+      projectName: pubspecProjectName ?? 'New project',
+      keyFormat: KeyFormat.camelCase,
+      localesOrder: ['en'],
+    );
+    final demoL10nYaml = L10nYamlModel(
+      arbDir: 'lib/l10n',
+      templateArbFile: 'app_en.arb',
+    );
     final arbFileEn = '${demoL10nYaml.arbDir}/app_en.arb';
 
     await ref.read(projectRepositoryProvider).saveLocmateModel(demoLocmateYaml);
     await ref.read(projectRepositoryProvider).saveL10nModel(demoL10nYaml);
-    await ref.read(projectRepositoryProvider).saveArbFileContent(
-      arbFileEn,
-      {'@@locale': 'en'},
-    );
+    await ref.read(projectRepositoryProvider).saveArbFileContent(arbFileEn, {
+      '@@locale': 'en',
+    });
     ref.invalidateSelf();
   }
 
@@ -118,17 +121,25 @@ class ProjectManager extends _$ProjectManager {
     final result = <ArbFileEntity>[];
     final arbFileNamesList = await ref
         .read(projectRepositoryProvider)
-        .listArbFiles(Constants.fullArbDirPath(
-          projectPath: projectPath,
-          arbDir: arbDir,
-        ));
+        .listArbFiles(
+          Constants.fullArbDirPath(projectPath: projectPath, arbDir: arbDir),
+        );
     final fullArbFilesPaths = arbFileNamesList
-        .map((e) => Constants.fullArbDirPath(
-            arbDir: arbDir, projectPath: projectPath, arbFileName: e))
+        .map(
+          (e) => Constants.fullArbDirPath(
+            arbDir: arbDir,
+            projectPath: projectPath,
+            arbFileName: e,
+          ),
+        )
         .toList();
-    final arbFileOps = await Future.wait(fullArbFilesPaths.map((e) => ref
-        .read(projectDatasourceProvider)
-        .fileOp(FileOpContextRead(path: e))));
+    final arbFileOps = await Future.wait(
+      fullArbFilesPaths.map(
+        (e) => ref
+            .read(projectDatasourceProvider)
+            .fileOp(FileOpContextRead(path: e)),
+      ),
+    );
     int index = 0;
     for (final arbFileOp in arbFileOps) {
       try {
@@ -154,10 +165,12 @@ class ProjectManager extends _$ProjectManager {
 
     if (locmateModel?.localesOrder?.isNotEmpty == true) {
       result.sort((a, b) {
-        final aIndex =
-            locmateModel!.localesOrder!.indexOf(a.locale.toLanguageTag());
-        final bIndex =
-            locmateModel.localesOrder!.indexOf(b.locale.toLanguageTag());
+        final aIndex = locmateModel!.localesOrder!.indexOf(
+          a.locale.toLanguageTag(),
+        );
+        final bIndex = locmateModel.localesOrder!.indexOf(
+          b.locale.toLanguageTag(),
+        );
         return aIndex - bIndex;
       });
     }
@@ -166,13 +179,19 @@ class ProjectManager extends _$ProjectManager {
   }
 
   Future<String?> getPubspecProjectName() async {
-    final pubspec =
-        await ref.read(projectRepositoryProvider).getProjectPubspec();
-    if (pubspec == null) {
+    try {
+      final pubspec = await ref
+          .read(projectRepositoryProvider)
+          .getProjectPubspec();
+      if (pubspec == null || pubspec.trim().isEmpty) {
+        return null;
+      }
+      final yaml = loadYaml(pubspec);
+      final map = Map<String, dynamic>.from(yaml);
+      return map['name'];
+    } catch (e) {
+      LoggerService.instance.web.e('Error while reading pubspec', error: e);
       return null;
     }
-    final yaml = loadYaml(pubspec);
-    final map = Map<String, dynamic>.from(yaml);
-    return map['name'];
   }
 }

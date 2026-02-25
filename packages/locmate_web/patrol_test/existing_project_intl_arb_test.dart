@@ -16,15 +16,16 @@ void main() {
     ($) async {
       final appSandboxPath = 'packages/locmate_web/patrol_test/sandbox';
       final locmateCliHelper = LocmateCliHelper();
-      final locmateServer =
-          await locmateCliHelper.runLocmateCli(appSandboxPath);
+      final locmateServer = await locmateCliHelper.runLocmateCli(
+        appSandboxPath,
+      );
       final fileHelper = FileHelper();
       await fileHelper.writePathContent(
         '$appSandboxPath/locmate.json',
         JsonStringMapper.mapToString({
           "keyFormat": "camelCase",
           "localesOrder": ["ar", "en"],
-          "projectName": "New project"
+          "projectName": "New project",
         }),
       );
       await fileHelper.writePathContent(
@@ -40,22 +41,19 @@ void main() {
       );
       await fileHelper.writePathContent(
         '$appSandboxPath/lib/l10n/intl_en.arb',
-        JsonStringMapper.mapToString(
-          {"@@locale": "en", "appHelloKey": "Hello World", "@appHelloKey": {}},
-        ),
+        JsonStringMapper.mapToString({
+          "@@locale": "en",
+          "appHelloKey": "Hello World",
+          "@appHelloKey": {},
+        }),
       );
       addTearDown(() async {
         await locmateCliHelper.deleteInPath(appSandboxPath);
         locmateServer.kill();
       });
-      EnvConfig.setTestInstance(
-        EnvConfigEnum.server,
-        locmateServer.url,
-      );
+      EnvConfig.setTestInstance(EnvConfigEnum.server, locmateServer.url);
       await $.pumpWidgetAndSettle(
-        ScreenshotWrapperWidget(
-          child: AppContainer(),
-        ),
+        ScreenshotWrapperWidget(child: AppContainer()),
       );
 
       final localizedKeysFinder = find.textContaining(

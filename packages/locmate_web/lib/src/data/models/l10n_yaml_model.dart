@@ -9,15 +9,10 @@ class L10nYamlModel with L10nYamlModelMappable {
   final String arbDir;
   final String templateArbFile;
 
-  L10nYamlModel({
-    required this.arbDir,
-    required this.templateArbFile,
-  });
+  L10nYamlModel({required this.arbDir, required this.templateArbFile});
 
-  factory L10nYamlModel.defaultValues() => L10nYamlModel(
-        arbDir: 'lib/l10n',
-        templateArbFile: 'intl_en.arb',
-      );
+  factory L10nYamlModel.defaultValues() =>
+      L10nYamlModel(arbDir: 'lib/l10n', templateArbFile: 'intl_en.arb');
 
   static L10nYamlModel? fromYamlContent(String? yamlContent) {
     if (yamlContent == null) {
@@ -30,7 +25,8 @@ class L10nYamlModel with L10nYamlModelMappable {
       return defaultValues;
     }
     if (map[L10nYamlModelMapper._f$templateArbFile.key] == null) {
-      map[L10nYamlModelMapper._f$templateArbFile.key] = defaultValues.templateArbFile;
+      map[L10nYamlModelMapper._f$templateArbFile.key] =
+          defaultValues.templateArbFile;
     }
     if (map[L10nYamlModelMapper._f$arbDir.key] == null) {
       map[L10nYamlModelMapper._f$arbDir.key] = defaultValues.arbDir;

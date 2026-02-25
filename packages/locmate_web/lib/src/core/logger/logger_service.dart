@@ -7,8 +7,12 @@ import 'package:rxdart/subjects.dart';
 
 class LoggerService {
   static final LoggerService instance = LoggerService._();
-  LoggerService._internal(this.web, this.server,
-      {required this.webOutput, required this.serverOutput});
+  LoggerService._internal(
+    this.web,
+    this.server, {
+    required this.webOutput,
+    required this.serverOutput,
+  });
   factory LoggerService._() {
     final printer = PrettyPrinter(
       methodCount: 2,

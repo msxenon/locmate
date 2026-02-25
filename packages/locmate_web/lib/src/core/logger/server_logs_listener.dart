@@ -12,13 +12,17 @@ class ServerLogsListener {
       Uri.parse(origin).replace(scheme: 'ws', path: 'logs'),
     );
 
-    _channel.stream.listen((message) {
-      LoggerService.instance.server.i(message);
-    }, onError: (error) {
-      LoggerService.instance.server.e(error.toString());
-    }, onDone: () {
-      LoggerService.instance.server.i('Server logs connection closed');
-    });
+    _channel.stream.listen(
+      (message) {
+        LoggerService.instance.server.i(message);
+      },
+      onError: (error) {
+        LoggerService.instance.server.e(error.toString());
+      },
+      onDone: () {
+        LoggerService.instance.server.i('Server logs connection closed');
+      },
+    );
   }
 
   void dispose() {

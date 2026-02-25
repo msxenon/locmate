@@ -7,8 +7,8 @@ void main() {
       "description": "Desc",
       "placeholders": {
         "duration": {"type": "String"},
-        "shiftName": {"type": "String"}
-      }
+        "shiftName": {"type": "String"},
+      },
     };
     final body = KeyBodyMapper.fromMap(bodyMap);
     expect(
@@ -17,7 +17,7 @@ void main() {
         description: 'Desc',
         placeholders: [
           KeyPlaceholder(key: 'duration', type: 'String'),
-          KeyPlaceholder(key: 'shiftName', type: 'String')
+          KeyPlaceholder(key: 'shiftName', type: 'String'),
         ],
       ),
     );
@@ -28,16 +28,14 @@ void main() {
     const bodyMap = {
       "placeholders": {
         "duration": {"type": "String"},
-      }
+      },
     };
     final body = KeyBodyMapper.fromMap(bodyMap);
     expect(
       body,
       KeyBody(
         description: null,
-        placeholders: [
-          KeyPlaceholder(key: 'duration', type: 'String'),
-        ],
+        placeholders: [KeyPlaceholder(key: 'duration', type: 'String')],
       ),
     );
     expect(body.toMap(), bodyMap);

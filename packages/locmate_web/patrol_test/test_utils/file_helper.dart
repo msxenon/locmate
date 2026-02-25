@@ -4,9 +4,9 @@ import 'package:host_bridge/host_bridge.dart';
 /// Helper to read and assert on host filesystem via host_bridge (for patrol tests).
 class FileHelper {
   FileHelper()
-      : _client = HostBridgeClient(
-          const String.fromEnvironment('HOST_BRIDGE_URL', defaultValue: ''),
-        );
+    : _client = HostBridgeClient(
+        const String.fromEnvironment('HOST_BRIDGE_URL', defaultValue: ''),
+      );
 
   final HostBridgeClient _client;
 

@@ -37,8 +37,9 @@ class Server {
     });
 
     _app.post(UrlPaths.dirOperation, (req, res) async {
-      final dirOpContext =
-          DirOpContextMapper.fromMap((await req.bodyAsJsonMap));
+      final dirOpContext = DirOpContextMapper.fromMap(
+        (await req.bodyAsJsonMap),
+      );
       switch (dirOpContext) {
         case DirOpContextCreate():
           final dir = Directory(dirOpContext.path);
@@ -47,17 +48,18 @@ class Server {
         case DirOpContextRead():
           final dir = Directory(dirOpContext.path);
           return ListOpResponse(
-                  response: dir
-                      .listSync()
-                      .map((e) => e.path.split('/').last)
-                      .toList())
-              .toMap();
+            response: dir
+                .listSync()
+                .map((e) => e.path.split('/').last)
+                .toList(),
+          ).toMap();
       }
     });
 
     _app.post(UrlPaths.fileOperation, (req, res) async {
-      final fileOpContext =
-          FileOpContextMapper.fromMap((await req.bodyAsJsonMap));
+      final fileOpContext = FileOpContextMapper.fromMap(
+        (await req.bodyAsJsonMap),
+      );
 
       switch (fileOpContext) {
         case FileOpContextWriteMap():
@@ -71,7 +73,8 @@ class Server {
           }
 
           file.writeAsStringSync(
-              JsonStringMapper.mapToString(fileOpContext.content));
+            JsonStringMapper.mapToString(fileOpContext.content),
+          );
           return VoidOpResponse().toMap();
         case FileOpContextWriteString():
           final file = File(fileOpContext.path);
@@ -128,7 +131,8 @@ class Server {
 
     ServerLogger.instance.log('${Emojis.compass} Listening on $url.');
     ServerLogger.instance.log(
-        '  ${Emojis.worldMap} Serving static files from \'${binaryDirectory.path.blue()}\'.');
+      '  ${Emojis.worldMap} Serving static files from \'${binaryDirectory.path.blue()}\'.',
+    );
   }
 
   void _logRequest(HttpRequest req) {

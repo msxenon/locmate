@@ -1,15 +1,16 @@
 // ignore_for_file: avoid_print
 
-/// Ensures locmate, locmate_web, and packages/locmate/web_output have the same version.
+/// Ensures locmate, locmate_web, and web_output have the same version.
 ///
 /// Reads version from:
 ///   - packages/locmate_web/pubspec.yaml (version: field)
-///   - packages/locmate/web_output/version.json (version key)
+///   - web_output/version.json (version key)
 ///
 /// Usage (from repo root):
 ///   dart run scripts/check_versions.dart [repo_root]
 ///
 /// Exit code: 0 if all match, 1 if mismatch or missing.
+library;
 
 import 'dart:convert';
 import 'dart:io';
@@ -20,27 +21,31 @@ void main(List<String> arguments) {
       : Directory.current.path;
 
   final locmateWebPubspec = File(
-      '$repoRoot${Platform.pathSeparator}packages${Platform.pathSeparator}locmate_web${Platform.pathSeparator}pubspec.yaml');
+    '$repoRoot${Platform.pathSeparator}packages${Platform.pathSeparator}locmate_web${Platform.pathSeparator}pubspec.yaml',
+  );
   final webOutputVersion = File(
-      '$repoRoot${Platform.pathSeparator}packages${Platform.pathSeparator}locmate${Platform.pathSeparator}web_output${Platform.pathSeparator}version.json');
+    '$repoRoot${Platform.pathSeparator}web_output${Platform.pathSeparator}version.json',
+  );
 
   final locmateWebVersion = _versionFromPubspec(locmateWebPubspec);
   final webOutputVersionStr = _versionFromJson(webOutputVersion);
 
   if (locmateWebVersion == null) {
     stderr.writeln(
-        'Could not read version from packages/locmate_web/pubspec.yaml');
+      'Could not read version from packages/locmate_web/pubspec.yaml',
+    );
     exit(1);
   }
   if (webOutputVersionStr == null) {
     stderr.writeln(
-        'Could not read version from packages/locmate/web_output/version.json (file missing or invalid)');
+      'Could not read version from web_output/version.json (file missing or invalid)',
+    );
     exit(1);
   }
 
   final versions = {
     'packages/locmate_web': locmateWebVersion,
-    'packages/locmate/web_output': webOutputVersionStr,
+    'web_output': webOutputVersionStr,
   };
 
   final unique = versions.values.toSet();
@@ -58,8 +63,10 @@ void main(List<String> arguments) {
 
 String? _versionFromPubspec(File file) {
   if (!file.existsSync()) return null;
-  final match = RegExp(r'^version:\s*(\S+)', multiLine: true)
-      .firstMatch(file.readAsStringSync());
+  final match = RegExp(
+    r'^version:\s*(\S+)',
+    multiLine: true,
+  ).firstMatch(file.readAsStringSync());
   return match?.group(1)?.trim();
 }
 

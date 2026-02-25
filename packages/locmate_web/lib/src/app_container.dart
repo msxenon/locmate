@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:locmate_web/src/app_widget.dart';
+import 'package:locmate_web/src/core/logger/provider_logger_observer.dart';
 
 class AppContainer extends StatefulWidget {
   final ProviderContainer? testContainer;
@@ -14,17 +15,16 @@ class _AppContainerState extends State<AppContainer> {
   late ProviderContainer container;
   @override
   void initState() {
-    container = widget.testContainer ?? ProviderContainer();
+    container =
+        widget.testContainer ??
+        ProviderContainer(observers: [ProviderLoggerObserver()]);
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return UncontrolledProviderScope(
-      container: container,
-      child: MyApp(),
-    );
+    return UncontrolledProviderScope(container: container, child: MyApp());
   }
 
   @override

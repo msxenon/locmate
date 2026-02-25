@@ -21,16 +21,16 @@ abstract mixin class PageSheetInterface {
 
   List<Widget> mainContentSliversBuilder(BuildContext context);
   List<Widget> _mainContentSliversBuilder(BuildContext context) => [
-        ...mainContentSliversBuilder(context),
-        SliverToBoxAdapter(
-          child: ValueListenableBuilder<double>(
-            valueListenable: sabHeightNotifier,
-            builder: (context, value, child) {
-              return SizedBox(height: value);
-            },
-          ),
-        ),
-      ];
+    ...mainContentSliversBuilder(context),
+    SliverToBoxAdapter(
+      child: ValueListenableBuilder<double>(
+        valueListenable: sabHeightNotifier,
+        builder: (context, value, child) {
+          return SizedBox(height: value);
+        },
+      ),
+    ),
+  ];
 
   bool forceMaxHeight = false;
 
@@ -67,9 +67,7 @@ abstract mixin class PageSheetInterface {
 
   Widget? leadingNavBarWidget() {
     return showLeadingNavBar
-        ? WoltModalSheetBackButton(
-            onBackPressed: onBackPressed,
-          )
+        ? WoltModalSheetBackButton(onBackPressed: onBackPressed)
         : null;
   }
 
