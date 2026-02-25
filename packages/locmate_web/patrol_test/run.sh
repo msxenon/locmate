@@ -52,8 +52,9 @@ fi
 export HOST_BRIDGE_URL
 echo "host_bridge listening at: $HOST_BRIDGE_URL"
 
-# 3. Resolve locmate package path for host_bridge (tests start locmate via host_bridge)
-LOCMATE_PACKAGE_PATH="$(cd "$(dirname "$0")/../../locmate" && pwd)"
+# 3. Resolve locmate CLI path for host_bridge (tests start locmate via host_bridge; CLI lives at workspace root)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+LOCMATE_PACKAGE_PATH="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 echo "locmate package at: $LOCMATE_PACKAGE_PATH"
 
 # 4. Run patrol tests with HOST_BRIDGE_URL and LOCMATE_PACKAGE_PATH

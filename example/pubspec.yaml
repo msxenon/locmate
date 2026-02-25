@@ -7,7 +7,7 @@ resolution: workspace
 
 dependencies:
   locmate:
-    path: ../packages/locmate
+    path: ../
 
 pubghost:
   ignore_dependencies:
