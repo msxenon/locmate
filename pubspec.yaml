@@ -79,4 +79,4 @@ melos:
         dart run scripts/check_web_versions.dart
         
 executables: 
-  locmate:
+  locmate: locmate
