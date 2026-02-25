@@ -2,7 +2,7 @@ name: locmate_web
 description: "A new Flutter project."
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 0.0.3
+version: 0.0.4
 
 environment:
   sdk: ^3.11.0

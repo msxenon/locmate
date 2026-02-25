@@ -1,6 +1,6 @@
 name: locmate
 description: Visual editor for Application Resource Bundle localization files to be used with the intl package.
-version: 0.0.3
+version: 0.0.4
 repository: https://github.com/msxenon/locmate
 
 environment:
