@@ -1,7 +1,7 @@
 ## Unreleased
 
 
-## 0.0.4
+## 0.0.5
 
 - Add Dark theme.
 - Fix arb path bug.
