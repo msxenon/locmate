@@ -1,6 +1,21 @@
+# ⚠️ Project Archived
+
+> **Note:** `locmate` is no longer actively maintained and has been officially archived.
+
+With the rapid evolution of modern AI capabilities, managing localization keys, translations, and JSON/ARB files in Flutter can now be handled seamlessly directly within developer workflows using AI tools. As a result, this utility package is no longer necessary.
+
+The codebase will remain available as a **read-only** repository for reference and historical purposes.
+
+Thank you to everyone who used, provided feedback on, or contributed to `locmate`! 🚀
+
+---
+
+*Happy coding!* 💙
+
 [![pub package](https://img.shields.io/pub/v/locmate.svg)](https://pub.dev/packages/locmate)
 
 # Locmate 📍
+
 
 **Locmate** is an all-in-one localization management suite for Dart and Flutter. It bridges the gap between raw translation files and a user-friendly management interface. It is a visual editor for Application Resource Bundle (`.arb`) localization files, designed for projects using the [intl](https://pub.dev/packages/intl) package. The editor runs locally, so you can use Git and never have to upload or download localization files.
 
